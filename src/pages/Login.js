@@ -18,11 +18,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import singupImg from "../assets/signup.png";
 import logo from "../assets/logo.png";
 
+import { useForm, Controller } from "react-hook-form";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" to="https://material-ui.com/">
         Your Website
       </Link>{" "}
       {new Date().getFullYear()}
@@ -70,6 +72,18 @@ const useStyles = makeStyles((theme) => ({
 export default function SignInSide() {
   const classes = useStyles();
 
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
+  console.log(errors);
+
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -102,18 +116,30 @@ export default function SignInSide() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
             <TextField
+              name="email"
               variant="outlined"
               margin="normal"
-              required
               fullWidth
               id="email"
               label="Email Address"
-              name="email"
               autoComplete="email"
               autoFocus
+              inputRef={register("email", {
+                // required: "Please enter an email",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: -"invalid email address",
+                },
+              })}
+              error={Boolean(errors.email)}
+              // helperText={errors.email?.wow}
             />
+
+            {errors.email && errors.email.message}
+            <br />
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -130,8 +156,6 @@ export default function SignInSide() {
               label="Remember me"
             />
             <Button
-              component={Link}
-              to="/dashboard"
               type="submit"
               fullWidth
               variant="contained"
@@ -141,7 +165,7 @@ export default function SignInSide() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link to="/" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
