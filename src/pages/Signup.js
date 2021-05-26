@@ -16,7 +16,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import singupImg from "../assets/login.png";
 import logo from "../assets/logo.png";
 
-import { Hidden } from "@material-ui/core";
+import { FormHelperText, Hidden } from "@material-ui/core";
+
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as yup from "yup";
+import { SignalCellularNullOutlined } from "@material-ui/icons";
 
 function Copyright() {
   return (
@@ -67,8 +71,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInSide() {
+export default function SignUpSide() {
   const classes = useStyles();
+
+  const initialValues = {
+    email: "",
+    password: "",
+    acceptTerms: false,
+  };
+
+  const validationSchema = yup.object({
+    email: yup
+      .string("Enter your email address")
+      .email("Enter a valid email address")
+      .required("Email is required"),
+    password: yup
+      .string("Enter your password")
+      .min(8, "Password should be of minimum 8 characters length")
+      .required("Password is required"),
+
+    acceptTerms: yup.bool().oneOf([true], "Please accept Terms & Conditions"),
+  });
+
+  const onSubmit = (values, props) => {
+    console.log(values);
+    props.resetForm();
+    // setTimeout(() => {
+    //     props.resetForm()
+    //     props.setSubmitting(false)
+    // }, 2000)
+  };
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -101,57 +133,92 @@ export default function SignInSide() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="I Agree to all Terms & Conditions"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              className={classes.submit}
-            >
-              Sign Up
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link to="/login" variant="body2">
-                  {"Already a User? Login Here"}
-                </Link>
-              </Grid>
-            </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
-          </form>
+          <Formik
+            initialValues={initialValues}
+            onSubmit={onSubmit}
+            validationSchema={validationSchema}
+          >
+            {({ errors, touched }) => (
+              <Form className={classes.form}>
+                {console.log(errors)}
+                <Field
+                  as={TextField}
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  // helperText={<ErrorMessage name="email" />}
+                  helperText={errors.email}
+                  error={Boolean(errors.email && touched.email)}
+                />
+                <Field
+                  as={TextField}
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  // helperText={<ErrorMessage name="password" />}
+                  helperText={errors.password}
+                  error={Boolean(errors.password)}
+                />
+
+                <Field
+                  as={FormControlLabel}
+                  name="acceptTerms"
+                  control={
+                    <Checkbox
+                      value="remember"
+                      color="primary"
+                      name="acceptTerms"
+                    />
+                  }
+                  label="I Agree to all Terms & Conditions"
+                />
+
+                <FormHelperText
+                  error={Boolean(errors.acceptTerms)}
+                  name="acceptTerms"
+                >
+                  {errors.acceptTerms}
+                </FormHelperText>
+
+                <Button
+                  disabled={
+                    errors.acceptTerms || errors.email || errors.password
+                  }
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  className={classes.submit}
+                >
+                  Sign Up
+                </Button>
+                <Grid container>
+                  <Grid item xs>
+                    <Link href="#" variant="body2">
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link to="/login" variant="body2">
+                      {"Already a User? Login Here"}
+                    </Link>
+                  </Grid>
+                </Grid>
+                <Box mt={5}>
+                  <Copyright />
+                </Box>
+              </Form>
+            )}
+          </Formik>
         </div>
       </Grid>
     </Grid>
