@@ -3,7 +3,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import btnBg from "./assets/btnBg.png";
 const theme = createMuiTheme({
   typography: {
-    fontFamily: "Quicksand",
+    fontFamily: "Poppins",
     fontWeightLight: 400,
     fontWeightRegular: 500,
     fontWeightMedium: 600,

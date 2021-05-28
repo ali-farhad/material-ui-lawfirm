@@ -18,7 +18,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import singupImg from "../assets/signup.png";
 import logo from "../assets/logo.png";
 
-import { useForm, Controller } from "react-hook-form";
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 
 function Copyright() {
   return (
@@ -69,20 +70,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const validationSchema = yup.object({
+  email: yup
+    .string('Enter your email address')
+    .email('Enter a valid email address')
+    .required('Email is required'),
+  password: yup
+    .string('Enter your password')
+    .min(8, 'Password should be of minimum 8 characters length')
+    .required('Password is required'),
+});
+
 export default function SignInSide() {
   const classes = useStyles();
 
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm();
+  
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
 
-  console.log(errors);
+
+ 
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -116,7 +132,7 @@ export default function SignInSide() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+          <form className={classes.form} onSubmit={formik.handleSubmit}>
             <TextField
               name="email"
               variant="outlined"
@@ -126,30 +142,25 @@ export default function SignInSide() {
               label="Email Address"
               autoComplete="email"
               autoFocus
-              inputRef={register("email", {
-                // required: "Please enter an email",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: -"invalid email address",
-                },
-              })}
-              error={Boolean(errors.email)}
-              // helperText={errors.email?.wow}
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
             />
-
-            {errors.email && errors.email.message}
-            <br />
 
             <TextField
               variant="outlined"
               margin="normal"
-              required
               fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
