@@ -1,11 +1,13 @@
 import React from "react";
+import { useState, useContext, useEffect } from "react";
+import { Link, useHistory } from "react-router-dom";
+
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import { Link } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
@@ -18,8 +20,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import singupImg from "../assets/signup.png";
 import logo from "../assets/logo.png";
 
-import { useFormik } from 'formik';
-import * as yup from 'yup';
+import { useFormik } from "formik";
+import * as yup from "yup";
+
+import FirebaseContext from "../context/firebase";
+import { useAlert } from "react-alert";
 
 function Copyright() {
   return (
@@ -72,33 +77,57 @@ const useStyles = makeStyles((theme) => ({
 
 const validationSchema = yup.object({
   email: yup
-    .string('Enter your email address')
-    .email('Enter a valid email address')
-    .required('Email is required'),
+    .string("Enter your email address")
+    .email("Enter a valid email address")
+    .required("Email is required"),
   password: yup
-    .string('Enter your password')
-    .min(8, 'Password should be of minimum 8 characters length')
-    .required('Password is required'),
+    .string("Enter your password")
+    .min(8, "Password should be of minimum 8 characters length")
+    .required("Password is required"),
 });
 
 export default function SignInSide() {
   const classes = useStyles();
+  const history = useHistory();
+  const alert = useAlert();
 
-  
+  const { firebase } = useContext(FirebaseContext);
+
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      const { email, password } = values;
+
+      try {
+        await firebase.auth().signInWithEmailAndPassword(email, password);
+        history.push("/dashboard");
+      } catch (error) {
+        console.log(error);
+        switch (error.code) {
+          case "auth/wrong-password":
+            alert.error("username and/or Password is incorrect!");
+            break;
+          case "auth/user-not-found":
+            alert.error("This User does not exist. Please Sign Up!");
+            break;
+          default:
+            alert.error("Something went wrong!");
+        }
+        values.email = "";
+        values.password = "";
+      }
+
+      // console.log(values);
     },
   });
 
-
-
- 
+  useEffect(() => {
+    document.title = "Login - Dextra";
+  }, []);
 
   return (
     <Grid container component="main" className={classes.root}>

@@ -38,8 +38,6 @@ import { changeFirstLogin } from "../services/firebase";
 import LoggedInUserContext from "../context/logged-in-user";
 import { useAlert } from "react-alert";
 
-import Main from "../pages/Main";
-
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -292,7 +290,14 @@ export default function Dashboard({ user: loggedInUser }) {
           [classes.contentShift]: open,
         })}
       >
-        <Main />
+        <div className={classes.drawerHeader} />
+
+        <Paper classes={{ root: classes.paperInfo }}>
+          <Typography variant="body1">
+            This page is blank for now. will be filled with required content
+            later on.
+          </Typography>
+        </Paper>
       </main>
     </div>
   );

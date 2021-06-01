@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import FirebaseContext from "../context/firebase";
 
@@ -23,6 +23,9 @@ import { FormHelperText, Hidden } from "@material-ui/core";
 
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
+
+import { doesUserEmailExist } from "../services/firebase";
+import { useAlert } from "react-alert";
 
 function Copyright() {
   return (
@@ -74,10 +77,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUpSide() {
-  const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
-
   const classes = useStyles();
+  const alert = useAlert();
 
   const history = useHistory();
   const { firebase } = useContext(FirebaseContext);
@@ -101,20 +102,16 @@ export default function SignUpSide() {
     acceptTerms: yup.bool().oneOf([true], "Please accept Terms & Conditions"),
   });
 
-  // const [noAvatar, setImg] = useState(null);
-
   useEffect(() => {
     document.title = "Sign Up - Dextra";
 
-    async function fetchImg() {
-      const image = await firebase.storage().ref().child("noavatar.jpg");
+    // async function fetchImg() {
+    //   const image = await firebase.storage().ref().child("noavatar.jpg");
 
-      image.getDownloadURL().then((url) => {
-        return url;
-      });
-
-      // setImg(defaultAvatar);
-    }
+    //   image.getDownloadURL().then((url) => {
+    //     return url;
+    //   });
+    // }
   }, []);
 
   const handleSignUp = async (values, props) => {
@@ -124,89 +121,43 @@ export default function SignUpSide() {
     //   const { email } = values;
     //   console.log(email);
     // }, 2000);
+    const { email, password } = values;
+    const username = email.split("@")[0];
 
-    try {
-      const { email, password } = values;
-      const username = email.split("@")[0];
+    const userEmailExists = await doesUserEmailExist(email);
+    if (!userEmailExists) {
+      try {
+        const createdUserResult = await firebase
+          .auth()
+          .createUserWithEmailAndPassword(email, password);
 
-      const createdUserResult = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password);
+        // authentication
+        // -> emailAddress & password & username (displayName)
+        await createdUserResult.user.updateProfile({
+          displayName: username,
+        });
 
-      // authentication
-      // -> emailAddress & password & username (displayName)
-      await createdUserResult.user.updateProfile({
-        displayName: username,
-      });
+        // firebase user collection (create a document)
+        await firebase
+          .firestore()
+          .collection("users")
+          .add({
+            userId: createdUserResult.user.uid,
+            username: username.toLowerCase(),
+            // fullName,
+            emailAddress: email.toLowerCase(),
+            following: ["2"],
+            followers: [],
+            dateCreated: Date.now(),
+            firstLogin: true,
+          });
 
-      console.log(createdUserResult.user.uid);
-      console.log(firebase.firestore().collection("users"));
-
-      // firebase user collection (create a document)
-      await firebase.firestore().collection("test").add({
-        // userId: createdUserResult.user.uid,
-        username: username.toLowerCase(),
-        fullName: "",
-        emailAddress: email.toLowerCase(),
-        dateCreated: Date.now(),
-      });
-
-      history.push("/login");
-
-      props.resetForm();
-      props.setSubmitting(false);
-    } catch (error) {
-      //   switch (error.code) {
-      //     case "auth/email-already-in-use":
-      //       console.log(error.message);
-      //       break;
-      //     default:
-      //       console.log(error);
-      //   }
-      // }
-      console.log(error);
-    }
-  };
-
-  const testHandle = async (event) => {
-    event.preventDefault();
-
-    try {
-      const username = email.split("@")[0];
-
-      const createdUserResult = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, pass);
-
-      // authentication
-      // -> emailAddress & password & username (displayName)
-      await createdUserResult.user.updateProfile({
-        displayName: username,
-      });
-
-      console.log(createdUserResult.user.uid);
-      console.log(firebase.firestore().collection("users"));
-
-      // firebase user collection (create a document)
-      await firebase.firestore().collection("test").doc("wow-this").set({
-        // userId: createdUserResult.user.uid,
-        username: username.toLowerCase(),
-        fullName: "",
-        emailAddress: email.toLowerCase(),
-        dateCreated: Date.now(),
-      });
-
-      history.push("/login");
-    } catch (error) {
-      //   switch (error.code) {
-      //     case "auth/email-already-in-use":
-      //       console.log(error.message);
-      //       break;
-      //     default:
-      //       console.log(error);
-      //   }
-      // }
-      console.log(error);
+        history.push("/dashboard");
+      } catch (error) {
+        alert.error(error.message);
+      }
+    } else {
+      alert.error("You already have an account with us. Please Login!");
     }
   };
 
@@ -241,7 +192,14 @@ export default function SignUpSide() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          {/* <Formik
+          <button
+            onClick={() => {
+              alert.success("It's ok now!");
+            }}
+          >
+            Success!
+          </button>
+          <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSignUp}
@@ -259,8 +217,8 @@ export default function SignUpSide() {
                   autoComplete="email"
                   autoFocus
                   // helperText={<ErrorMessage name="email" />}
-                  helperText={errors.email}
-                  error={Boolean(errors.email && touched.email)}
+                  helperText={touched.email && errors.email}
+                  error={Boolean(touched.email && errors.email)}
                 />
                 <Field
                   as={TextField}
@@ -271,10 +229,9 @@ export default function SignUpSide() {
                   label="Password"
                   type="password"
                   id="password"
-                  autoComplete="current-password"
                   // helperText={<ErrorMessage name="password" />}
-                  helperText={errors.password}
-                  error={Boolean(errors.password)}
+                  helperText={touched.password && errors.password}
+                  error={Boolean(touched.password && errors.password)}
                 />
 
                 <Field
@@ -291,7 +248,7 @@ export default function SignUpSide() {
                 />
 
                 <FormHelperText
-                  error={Boolean(errors.acceptTerms)}
+                  error={Boolean(touched.acceptTerms && errors.acceptTerms)}
                   name="acceptTerms"
                 >
                   {errors.acceptTerms}
@@ -323,24 +280,7 @@ export default function SignUpSide() {
                 </Box>
               </Form>
             )}
-          </Formik> */}
-
-          <form onSubmit={testHandle} method="POST">
-            <input
-              onChange={({ target }) => setEmail(target.value)}
-              type="text"
-              name="email"
-              id="email"
-            />
-            <input
-              type="password"
-              name=""
-              id=""
-              onChange={({ target }) => setPass(target.value)}
-            />
-
-            <input type="submit" value="signup" />
-          </form>
+          </Formik>
         </div>
       </Grid>
     </Grid>

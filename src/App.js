@@ -1,12 +1,14 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { lazy, Suspense } from 'react';
-import ReactLoader from './components/loader';
+import { lazy, Suspense } from "react";
+import ReactLoader from "./components/loader";
 import { ThemeProvider } from "@material-ui/core";
 
 import theme from "./theme";
 
+import UserContext from "./context/user";
+import useAuthListener from "./hooks/use-auth-listener";
 
-const Login = lazy(() => import('./pages/Login'));
+const Login = lazy(() => import("./pages/Login"));
 
 // const Login = lazy(() => {
 //   return Promise.all([
@@ -16,36 +18,36 @@ const Login = lazy(() => import('./pages/Login'));
 //   .then(([moduleExports]) => moduleExports);
 // });
 
-
-const SignUp = lazy(() => import('./pages/Signup'));
-const Dashboard = lazy(() => import('./pages/Dashboard'));
-const AllUsers = lazy(() => import('./pages/adminPages/AllUsers'));
-const MyProfile = lazy(() => import('./pages/MyProfile'));
-
+const SignUp = lazy(() => import("./pages/Signup"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const AllUsers = lazy(() => import("./pages/adminPages/AllUsers"));
+const MyProfile = lazy(() => import("./pages/MyProfile"));
 
 function App() {
+  const { user } = useAuthListener();
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-      <Suspense fallback={<ReactLoader />}>
-        <Switch>
+    <UserContext.Provider value={{ user }}>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Suspense fallback={<ReactLoader />}>
+            <Switch>
+              <Route path="/login" component={Login} />
+              <Route path="/signup" component={SignUp} />
+              <Route path="/dashboard">
+                <Dashboard user={user} />
+              </Route>
 
-          <Route path="/login" component={Login} />
-          <Route path="/signup" component={SignUp} />
-          
-          <Route path="/dashboard">
-            <Dashboard />
-          </Route>
-          <Route path="/allusers">
-            <AllUsers />
-          </Route>
-          <Route path="/myprofile">
-            <MyProfile />
-          </Route>
-        </Switch>
-        </Suspense>
-      </Router>
-    </ThemeProvider>
+              <Route path="/allusers">
+                <AllUsers />
+              </Route>
+              <Route path="/myprofile">
+                <MyProfile />
+              </Route>
+            </Switch>
+          </Suspense>
+        </Router>
+      </ThemeProvider>
+    </UserContext.Provider>
   );
 }
 

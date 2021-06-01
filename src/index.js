@@ -6,9 +6,23 @@ import App from "./App";
 import FirebaseContext from "./context/firebase";
 import { firebase, FieldValue } from "./libs/firebase";
 
+//imports for notification
+import { positions, Provider } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
+
+const options = {
+  timeout: 4000,
+  position: positions.TOP_RIGHT,
+  containerStyle: {
+    zIndex: 100000,
+  },
+};
+
 ReactDOM.render(
   <FirebaseContext.Provider value={{ firebase, FieldValue }}>
-    <App />
+    <Provider template={AlertTemplate} {...options}>
+      <App />
+    </Provider>
   </FirebaseContext.Provider>,
   document.getElementById("root")
 );
