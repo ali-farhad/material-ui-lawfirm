@@ -3,7 +3,7 @@ import React from "react";
 
 import { Formik, Form } from "formik";
 
-import BasicForm from "../components/Forms/BasicForm";
+import BillingForm from "../components/Forms/BillingForm";
 import profileFormModel from "../components/FormModels/profileFormModel";
 import formInitialValues from "../components/FormModels/formInitialValues";
 import currentValidationSchema from "../components/FormModels/validationSchema";
@@ -15,11 +15,11 @@ export default function Notes() {
     <div style={{ maxWidth: "60em", margin: "5em auto" }}>
       <Formik
         initialValues={formInitialValues}
-        validationSchema={currentValidationSchema[0]}
+        validationSchema={currentValidationSchema[2]}
         // onSubmit={_handleSubmit}
       >
         <Form style={{ maxWidth: "60em", margin: "1.3em auto" }}>
-          <BasicForm formField={formField} />
+          <BillingForm formField={formField} />
         </Form>
       </Formik>
     </div>
