@@ -1,4 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+
+import Skeleton from "react-loading-skeleton";
 
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -31,11 +34,13 @@ import GroupIcon from "@material-ui/icons/Group";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 import { Button, Grid, Paper } from "@material-ui/core";
-import { Link } from "react-router-dom";
 
 import useUser from "../hooks/use-user";
 import { changeFirstLogin } from "../services/firebase";
 import LoggedInUserContext from "../context/logged-in-user";
+import FirebaseContext from "../context/firebase";
+import UserContext from "../context/user";
+
 import { useAlert } from "react-alert";
 
 import Main from "../pages/Main";
@@ -107,11 +112,19 @@ const useStyles = makeStyles((theme) => ({
   paperInfo: {
     padding: "3em",
   },
+  imageContainer: {
+    padding: 0,
+    "&:hover": {
+      backgroundColor: "transparent",
+    },
+  },
 }));
 
-export default function Dashboard({ user: loggedInUser }) {
+export default function Dashboard(props) {
+  const { children } = props;
   const classes = useStyles();
   const alert = useAlert();
+  const history = useHistory();
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -135,17 +148,24 @@ export default function Dashboard({ user: loggedInUser }) {
     setBellEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (code) => {
     setAnchorEl(null);
+    if (code === "logout") {
+      firebase.auth().signOut();
+      history.push("/login");
+    }
   };
 
   const handleBellClose = () => {
     setBellEl(null);
   };
 
-  const { user, setActiveUser } = useUser(loggedInUser.uid);
+  const { user: loggedInUser } = useContext(UserContext);
 
-  console.log("dashboard:", user);
+  const { user } = useUser(loggedInUser?.uid);
+
+  console.log(user);
+  const { firebase } = useContext(FirebaseContext);
 
   useEffect(() => {
     document.title = "Dashboard - Dextera";
@@ -181,7 +201,15 @@ export default function Dashboard({ user: loggedInUser }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap style={{ flexGrow: 1 }}>
-            Dashboard
+            {loggedInUser ? (
+              user ? (
+                `Dashboard - welcome, ${user.username}!`
+              ) : (
+                <Skeleton />
+              )
+            ) : (
+              <Skeleton />
+            )}
           </Typography>
           <IconButton aria-label="delete" className={classes.margin}>
             <Brightness4Icon />
@@ -229,7 +257,7 @@ export default function Dashboard({ user: loggedInUser }) {
           >
             <MenuItem onClick={handleClose}>Profile</MenuItem>
             <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem onClick={() => handleClose("logout")}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
@@ -245,11 +273,22 @@ export default function Dashboard({ user: loggedInUser }) {
         <div className={classes.drawerHeader}>
           <Grid container style={{ alignItems: "center" }}>
             <Grid item style={{ flexGrow: 1 }}>
-              <img
-                style={{ width: "125px", marginLeft: "1em", display: "block" }}
-                src={logo}
-                alt=""
-              />
+              <Button
+                component={Link}
+                to="/dashboard"
+                disableRipple
+                className={classes.imageContainer}
+              >
+                <img
+                  style={{
+                    width: "125px",
+                    marginLeft: "1em",
+                    display: "block",
+                  }}
+                  src={logo}
+                  alt=""
+                />
+              </Button>
             </Grid>
             <Grid item>
               <IconButton onClick={handleDrawerClose}>
@@ -264,7 +303,7 @@ export default function Dashboard({ user: loggedInUser }) {
         </div>
         <Divider />
         <List>
-          <ListItem button>
+          <ListItem component={Link} to="/myprofile" button>
             <ListItemIcon>
               <AccountCircle />
             </ListItemIcon>
@@ -292,7 +331,7 @@ export default function Dashboard({ user: loggedInUser }) {
           [classes.contentShift]: open,
         })}
       >
-        <Main />
+        {children}
       </main>
     </div>
   );

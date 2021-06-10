@@ -8,6 +8,9 @@ import theme from "./theme";
 import UserContext from "./context/user";
 import useAuthListener from "./hooks/use-auth-listener";
 
+import Main from "./pages/Main";
+import Notes from "./pages/Notes";
+
 const Login = lazy(() => import("./pages/Login"));
 
 // const Login = lazy(() => {
@@ -34,14 +37,31 @@ function App() {
               <Route path="/login" component={Login} />
               <Route path="/signup" component={SignUp} />
               <Route path="/dashboard">
-                <Dashboard user={user} />
+                <Dashboard user={user}>
+                  <Main />
+                </Dashboard>
               </Route>
 
               <Route path="/allusers">
-                <AllUsers />
+                <Dashboard user={user}>
+                  <AllUsers />
+                </Dashboard>
               </Route>
+
+              {/* <Route path="/allusers">
+                <AllUsers />
+              </Route> */}
+
               <Route path="/myprofile">
-                <MyProfile />
+                <Dashboard user={user}>
+                  <MyProfile />
+                </Dashboard>
+              </Route>
+
+              <Route path="/notes">
+                <Dashboard user={user}>
+                  <Notes />
+                </Dashboard>
               </Route>
             </Switch>
           </Suspense>
