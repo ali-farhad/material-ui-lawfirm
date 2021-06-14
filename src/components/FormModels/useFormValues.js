@@ -29,7 +29,5 @@ export default function useFormValues(userId) {
     }
   }, [firebase, userId]);
 
-  console.log("userForm", userFormData);
-
   return { userFormData, setUserFormData, isLoading };
 }

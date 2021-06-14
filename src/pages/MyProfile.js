@@ -82,8 +82,17 @@ const useStyles = makeStyles((theme) => ({
     margin: "4rem 0",
   },
   loading: {
-    margin: "4rem 0",
-    height: "100vh",
+    // margin: "4rem 0",
+    height: "5vh",
+  },
+  wrapper: {
+    display: "flex",
+    justifyContent: "flex-end",
+    maxWidth: "82em",
+    marginTop: "2em",
+  },
+  test: {
+    marginTop: "5em",
   },
 }));
 
@@ -93,10 +102,6 @@ export default function MyProfile({ user }) {
 
   // const { user } = useContext(UserContext);
   const { firebase } = useContext(FirebaseContext);
-
-  function _sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
 
   // console.log("wow", user.userId);
 
@@ -147,20 +152,47 @@ export default function MyProfile({ user }) {
   async function _submitForm(values, actions) {
     actions.setSubmitting(false);
 
+    // console.log(values);
+
     try {
       firebase
         .firestore()
         .collection("profiles")
-        .add({
+        .doc(`${user.displayName}`)
+        .set({
           userId: user.uid,
           ...values,
         });
+    } catch (error) {
+      console.log("crate error", error.message);
+    }
+
+    try {
+      // let query = firebase
+      //   .firestore()
+      //   .collection("profiles")
+      //   .where("userId", "==", user.uid);
+      // query.get().then(function (querySnapshot) {
+      //   querySnapshot.forEach(function (doc) {
+      //     doc.ref.delete();
+      //   });
+      // });
+
+      // firebase
+      //   .firestore()
+      //   .collection("profiles")
+      //   .add({
+      //     userId: user.uid,
+      //     ...values,
+      //   });
+
       history.push("/dashboard");
       alert.success("Profile updated successfully!");
     } catch (error) {
       console.log(error);
-      alert.Error(error.message);
+      alert.error(error.message);
     }
+
     // console.log(values);
   }
 
@@ -178,37 +210,12 @@ export default function MyProfile({ user }) {
     setActiveStep(activeStep - 1);
   }
 
-  // useEffect(() => {
-  //   async function doesDataExist() {
-  //     _sleep(1000);
-  //     let query = firebase.firestore().collection("profiles");
-  //     query = query.where("userId", "==", user.uid);
-  //     const result = await query.get();
-  //     const myData = result.docs.map((l) => ({
-  //       ...l.data(),
-  //       docId: l.id,
-  //     }));
-
-  //     return myData;
-  //   }
-
-  //   try {
-  //     (async () => {
-  //       const result = await doesDataExist();
-  //       // console.log("res", result[0]);
-  //       setUserFormData(result[0]);
-  //       console.log("initvalue", formInitialValues);
-  //       console.log("userform", userFormData);
-  //     })();
-  //   } catch (error) {}
-  // }, [firebase, user]);
-
   const { userFormData, isLoading } = useFormValues(user.uid);
 
-  console.log(isLoading);
   return (
     <>
-      {isLoading && <Skeleton className={classes.loading} />}
+      <div className={classes.test} />
+      {isLoading && <Skeleton className={classes.loading} count={15} />}
 
       {!isLoading && (
         <div className={classes.drawerHeader}>
@@ -248,7 +255,7 @@ export default function MyProfile({ user }) {
                   <Form>
                     {_renderStepContent(activeStep)}
 
-                    <div className={classes.buttons}>
+                    <div className={classes.wrapper}>
                       {activeStep !== 0 && (
                         <Button
                           variant="contained"
@@ -259,7 +266,7 @@ export default function MyProfile({ user }) {
                           Back
                         </Button>
                       )}
-                      <div className={classes.wrapper}>
+                      <div>
                         <Button
                           disabled={isSubmitting}
                           type="submit"
