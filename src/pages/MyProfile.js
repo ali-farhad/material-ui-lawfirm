@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -44,11 +44,36 @@ import { Link } from "react-router-dom";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
+import {  CircularProgress } from "@material-ui/core";
 
-import { Formik, Form, useFormik, errors } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
-import TextField from "../components/FormsUI/TextField";
+import BasicForm from "../components/Forms/BasicForm";
+import BillingForm from "../components/Forms/BillingForm";
+import CompanyForm from "../components/Forms/CompanyForm";
+
+import validationSchema from '../components/FormModels/validationSchema';
+import profileFormModel from '../components/FormModels/profileFormModel';
+import formInitialValues from '../components/FormModels/formInitialValues';
+import { current } from "immer";
+
+
+const steps = ["Basic Details", "Company Details", "Billing Information"];
+const { formId, formField } = profileFormModel;
+
+function _renderStepContent(step) {
+  switch (step) {
+    case 0:
+      return <BasicForm formField={formField} />;
+    case 1:
+      return <BillingForm formField={formField} />;
+    case 2:
+      return <CompanyForm formField={formField} />;
+    default:
+      return <div>Not Found</div>;
+  }
+}
 
 const drawerWidth = 240;
 
@@ -133,7 +158,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MyProfile({ errors }) {
+export default function MyProfile() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -170,351 +195,45 @@ export default function MyProfile({ errors }) {
     checkedB: true,
   });
 
+
+
   const handleSwitchChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-  function getSteps() {
-    return ["Basic Details", "Company Details", "Billing Information"];
+  const [activeStep, setActiveStep] = useState(0);
+  const currentValidationSchema = validationSchema[activeStep];
+  console.log(currentValidationSchema.fields);
+  const isLastStep = activeStep === steps.length - 1;
+
+  function _sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  function getStepContent(step) {
-    switch (step) {
-      case 0:
-        return "FORM 1";
-      case 1:
-        return "FORM 2";
-      case 2:
-        return "FORM 3";
-      default:
-        return "Unknown step";
+  async function _submitForm(values, actions) {
+    await _sleep(1000);
+    alert(JSON.stringify(values, null, 2));
+    actions.setSubmitting(false);
+
+    setActiveStep(activeStep + 1);
+    console.log(values);
+  }
+
+  function _handleSubmit(values, actions) {
+    if (isLastStep) {
+      _submitForm(values, actions);
+    } else {
+      setActiveStep(activeStep + 1);
+      actions.setTouched({});
+      actions.setSubmitting(false);
     }
   }
 
-  const [activeStep, setActiveStep] = React.useState(0);
-  const steps = getSteps();
+  function _handleBack() {
+    setActiveStep(activeStep - 1);
+  }
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
-  const BasicForm = () => {
-    return (
-      <Formik
-        initialValues={{ ...INITIAL_FORM_STATE }}
-        validationSchema={FORM_VALIDATION}
-        onSubmit={(values, props) => {
-          console.log(values);
-        }}
-      >
-        {({ isSubmitting, errors, touched }) => (
-          <Form
-            className={classes.form}
-            style={{ maxWidth: "60em", margin: "1.3em auto" }}
-          >
-            <Paper>
-              <Grid container spacing={2}>
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <Typography variant="h6">Enter Your Basic Details</Typography>
-                </Grid>
-                <Grid container spacing={2} style={{ padding: "1em 2em" }}>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="firstName" label="First Name" />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="midName" label="Middle Name" />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="lastName" label="Last Name" />
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="userName" label="Username" />
-                </Grid>
-
-                <Grid container spacing={2} style={{ padding: "1em 2em" }}>
-                  <Grid item xs={12} md={6}>
-                    <TextField name="phone" label="Phone Number" />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField name="mobile" label="Mobile Number" />
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="website" label="Your Website URL" />
-                </Grid>
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="linkadin" label="Your Linkdin Profile URL" />
-                </Grid>
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="facebook" label="Your Facebook URL" />
-                </Grid>
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="twitter" label="Your Twitter URL" />
-                </Grid>
-              </Grid>
-            </Paper>
-          </Form>
-        )}
-      </Formik>
-    );
-  };
-
-  const CompanyForm = () => {
-    return (
-      <Formik
-        initialValues={{ ...INITIAL_FORM_STATE }}
-        validationSchema={FORM_VALIDATION}
-        onSubmit={(values) => {
-          console.log(values);
-        }}
-      >
-        {({ isSubmitting, errors, touched }) => (
-          <Form
-            className={classes.form}
-            style={{ maxWidth: "60em", margin: "1.3em auto" }}
-          >
-            <Paper>
-              <Grid container spacing={2}>
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <Typography variant="h6">
-                    Enter Your Company Details
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="cName" label="Company Name" />
-                </Grid>
-
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="cMail" label="Company Email" />
-                </Grid>
-
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="cPhone" label="Company Phone Number" />
-                </Grid>
-
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="cCountry" label="Company Country" />
-                </Grid>
-
-                <Grid container spacing={2} style={{ padding: "1em 2em" }}>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="cCity" label="Company City" />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="cState" label="Company State" />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="cZip" label="Company Zip" />
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="cAddress" label="Company Address" />
-                </Grid>
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="cSuit" label="Company Suit" />
-                </Grid>
-
-                <Grid container spacing={2} style={{ padding: "1em 2em" }}>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="cAttornies" label="Number of Attornies" />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="cEmp" label="Number of Employees" />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="cOffices" label="Number of Offices" />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Form>
-        )}
-      </Formik>
-    );
-  };
-
-  const BillingForm = () => {
-    return (
-      <Formik
-        initialValues={{ ...INITIAL_FORM_STATE }}
-        validationSchema={FORM_VALIDATION}
-        onSubmit={(values) => {
-          console.log(values);
-        }}
-      >
-        {({ isSubmitting, errors, touched }) => (
-          <Form
-            className={classes.form}
-            style={{ maxWidth: "60em", margin: "1.3em auto" }}
-          >
-            <Paper>
-              <Grid container spacing={2}>
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <Typography variant="h6">
-                    Enter Your Billing Details
-                  </Typography>
-                </Grid>
-                {/* bankAcc: "", routingNum: "", creditCardNum: "", securityCode:
-                "", expiry: "", bAddress: "", bSuit: "", bCountry: "", bCity:
-                "", bState: "", bZip: "", */}
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="bankAcc" label="Bank Account Number" />
-                </Grid>
-
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="routingNum" label="Routing Number" />
-                </Grid>
-
-                <Grid container spacing={2} style={{ padding: "1em 2em" }}>
-                  <Grid item xs={12} md={4}>
-                    <TextField
-                      name="creditCardNum"
-                      label="Credit Card Number"
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="securityCode" label="Card Secuirty Code" />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="expiry" label="Expiry Month & Year" />
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="bCountry" label="Business Country" />
-                </Grid>
-
-                <Grid container spacing={2} style={{ padding: "1em 2em" }}>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="bCity" label="Business City" />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="bState" label="Business State" />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField name="bZip" label="Business Zip" />
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="bAddress" label="Business Address" />
-                </Grid>
-                <Grid item xs={12} style={{ padding: "1em 2em" }}>
-                  <TextField name="bSuit" label="Business Suit" />
-                </Grid>
-              </Grid>
-            </Paper>
-          </Form>
-        )}
-      </Formik>
-    );
-  };
-
-  const INITIAL_FORM_STATE = {
-    //basic details
-    firstName: "",
-    midName: "",
-    lastName: "",
-    userName: "",
-    phone: "",
-    mobile: "",
-    website: "",
-    linkdin: "",
-    facebook: "",
-    twitter: "",
-
-    //company details
-    cName: "",
-    cMail: "",
-    cPhone: "",
-    cCountry: "",
-    cAddress: "",
-    cSuit: "",
-    cCity: "",
-    cState: "",
-    cZip: "",
-    cAttornies: "",
-    cEmp: "",
-    cOffices: "",
-
-    //Billing Details
-    bankAcc: "",
-    routingNum: "",
-    creditCardNum: "",
-    securityCode: "",
-    expiry: "",
-    bAddress: "",
-    bSuit: "",
-    bCountry: "",
-    bCity: "",
-    bState: "",
-    bZip: "",
-  };
-  const FORM_VALIDATION = Yup.object().shape({
-    firstName: Yup.string().required("this field is required"),
-    midName: Yup.string().required("this field is required"),
-    lastName: Yup.string().required("this field is required"),
-    userName: Yup.string().required("this field is required"),
-
-    phone: Yup.number()
-      .required("this field is required")
-      .integer()
-      .typeError("Please provide valid number"),
-    mobile: Yup.number()
-      .required("this field is required")
-      .integer()
-      .typeError("Please provide valid number"),
-    website: Yup.string(),
-    linkadin: Yup.string(),
-    facebook: Yup.string(),
-    twitter: Yup.string(),
-
-    //Company Info
-    cName: Yup.string().required("This filed is required"),
-    cMail: Yup.string()
-      .email("Invalid Email Address")
-      .required("This filed is required"),
-    cPhone: Yup.number()
-      .required("this field is required")
-      .integer()
-      .typeError("Please provide valid number"),
-    cCountry: Yup.string().required("This filed is required"),
-    cAddress: Yup.string().required("This filed is required"),
-    cCity: Yup.string().required("This filed is required"),
-    cSuit: Yup.string().required("This filed is required"),
-    cState: Yup.string().required("This filed is required"),
-    cZip: Yup.number()
-      .integer()
-      .typeError("Enter Valid Number")
-      .required("This filed is required"),
-    cAttornies: Yup.number()
-      .integer()
-      .typeError("Enter Valid Number")
-      .required("This filed is required"),
-    cEmp: Yup.number()
-      .integer()
-      .typeError("Enter Valid Number")
-      .required("This filed is required"),
-    cOffices: Yup.number()
-      .integer()
-      .typeError("Enter Valid Number")
-      .required("This filed is required"),
-  });
-
-  console.log(errors);
 
   return (
     <div className={classes.root}>
@@ -668,72 +387,67 @@ export default function MyProfile({ errors }) {
           </Typography>
         </Paper>
 
-        <Stepper activeStep={activeStep} alternativeLabel>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
+        <Stepper activeStep={activeStep} className={classes.stepper}>
+        {steps.map(label => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
 
-        {activeStep === 0 ? (
-          <div>
-            <BasicForm />
-          </div>
-        ) : null}
+      <React.Fragment>
+        {activeStep === steps.length ? (
+          // <CheckoutSuccess />
+          <div>wow</div>
+        ) : (
+          <Formik
+            initialValues={formInitialValues}
+            validationSchema={currentValidationSchema}
+            onSubmit={_handleSubmit}
+          >
+            {({ isSubmitting }) => (
+              <Form >
+                {_renderStepContent(activeStep)}
 
-        {activeStep === 1 ? (
-          <div>
-            <CompanyForm />
-          </div>
-        ) : null}
+                <div className={classes.buttons}>
+                  {activeStep !== 0 && (
+                    <Button onClick={_handleBack} className={classes.button}>
+                      Back
+                    </Button>
+                  )}
+                  <div className={classes.wrapper}>
+                    <Button
+                      disabled={isSubmitting}
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                    >
+                      {isLastStep ? 'Place order' : 'Next'}
+                    </Button>
+                    {isSubmitting && (
+                      <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                      />
+                    )}
+                  </div>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        )}
+      </React.Fragment>
 
-        {activeStep === 2 ? (
-          <div>
-            <BillingForm />
-          </div>
-        ) : null}
-        <Button
-          disabled={errors}
-          variant="contained"
-          color="primary"
-          onClick={handleNext}
-        >
-          {activeStep === steps.length - 1 ? "Submit" : "Next"}
-        </Button>
 
-        {/* <div>
-          {activeStep === steps.length ? (
-            <div>
-              <Typography className={classes.instructions}>
-                All steps completed
-              </Typography>
-              <Button onClick={handleReset}>Reset</Button>
-            </div>
-          ) : (
-            <div>
-              <Typography className={classes.instructions}>
-                {getStepContent(activeStep)}
-              </Typography>
-              <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  className={classes.backButton}
-                >
-                  Back
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleNext}
-                >
-                  {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                </Button>
-              </div>
-            </div>
-          )}
-        </div> */}
+     
+
+    
+        
+
+    
+  
+    
       </main>
     </div>
   );
