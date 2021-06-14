@@ -192,13 +192,6 @@ export default function SignUpSide() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <button
-            onClick={() => {
-              alert.success("It's ok now!");
-            }}
-          >
-            Success!
-          </button>
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -215,7 +208,6 @@ export default function SignUpSide() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  autoFocus
                   // helperText={<ErrorMessage name="email" />}
                   helperText={touched.email && errors.email}
                   error={Boolean(touched.email && errors.email)}
