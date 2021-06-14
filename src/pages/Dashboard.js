@@ -331,7 +331,7 @@ export default function Dashboard(props) {
           [classes.contentShift]: open,
         })}
       >
-        {children}
+        {React.cloneElement(props.children, { ...props })}
       </main>
     </div>
   );
