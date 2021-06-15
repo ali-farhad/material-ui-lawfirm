@@ -121,8 +121,16 @@ export default function SignUpSide() {
     //   const { email } = values;
     //   console.log(email);
     // }, 2000);
+    const checkDomains = ["gmail.com", "yahoo.com", "outlook.com"];
     const { email, password } = values;
     const username = email.split("@")[0];
+    const domain = email.substring(email.lastIndexOf("@") + 1);
+    let accountType = "";
+    if (checkDomains.includes(domain)) {
+      accountType = "limited";
+    } else {
+      accountType = "Standard";
+    }
 
     const userEmailExists = await doesUserEmailExist(email);
     if (!userEmailExists) {
@@ -150,6 +158,7 @@ export default function SignUpSide() {
             followers: [],
             dateCreated: Date.now(),
             firstLogin: true,
+            accountType: accountType,
           });
 
         history.push("/dashboard");

@@ -34,6 +34,8 @@ import GroupIcon from "@material-ui/icons/Group";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 import { Button, Grid, Paper } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+import { deepOrange } from "@material-ui/core/colors";
 
 import useUser from "../hooks/use-user";
 import { changeFirstLogin } from "../services/firebase";
@@ -117,6 +119,10 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "transparent",
     },
+  },
+  orange: {
+    color: theme.palette.getContrastText(deepOrange[500]),
+    backgroundColor: deepOrange[500],
   },
 }));
 
@@ -215,7 +221,7 @@ export default function Dashboard(props) {
             <Brightness4Icon />
           </IconButton>
 
-          <Badge badgeContent={4} color="primary">
+          <Badge badgeContent={2} color="primary">
             <NotificationsIcon
               aria-controls="noti-menu"
               aria-haspopup="true"
@@ -242,12 +248,22 @@ export default function Dashboard(props) {
               <ListItemText primary="This is second alert" />
             </MenuItem>
           </Menu>
-          <AccountCircle
+          {/* <AccountCircle
             aria-controls="simple-menu"
             aria-haspopup="true"
             onClick={handleClick}
             style={{ margin: "0 1em" }}
-          />
+          /> */}
+
+          <Avatar
+            className={classes.orange}
+            style={{ margin: "0 1em" }}
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleClick}
+          >
+            {user && user.username.substring(0, 2).toUpperCase()}
+          </Avatar>
           <Menu
             id="simple-menu"
             anchorEl={anchorEl}
@@ -317,14 +333,14 @@ export default function Dashboard(props) {
           </ListItem>
         </List>
         <Divider />
-        <List>
+        {/* <List>
           <ListItem component={Link} to="/allusers" button>
             <ListItemIcon>
               <GroupIcon />
             </ListItemIcon>
             <ListItemText primary="All Users" />
           </ListItem>
-        </List>
+        </List> */}
       </Drawer>
       <main
         className={clsx(classes.content, {

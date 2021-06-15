@@ -43,27 +43,27 @@ function App() {
                 </Dashboard>
               </Route> */}
 
-<ProtectedRoute user={user} path="/dashboard" exact>
-              <Dashboard >
-                <Main />
+              <ProtectedRoute user={user} path="/dashboard" exact>
+                <Dashboard user={user}>
+                  <Main />
                 </Dashboard>
-            </ProtectedRoute>
+              </ProtectedRoute>
 
-              <Route path="/allusers">
+              {/* <Route path="/allusers">
                 <Dashboard user={user}>
                   <AllUsers />
                 </Dashboard>
-              </Route>
+              </Route> */}
 
               {/* <Route path="/allusers">
                 <AllUsers />
               </Route> */}
 
-              <Route path="/myprofile">
+              <ProtectedRoute user={user} path="/myprofile" exact>
                 <Dashboard user={user}>
                   <MyProfile />
                 </Dashboard>
-              </Route>
+              </ProtectedRoute>
 
               <Route path="/notes">
                 <Dashboard user={user}>
