@@ -10,6 +10,7 @@ import useAuthListener from "./hooks/use-auth-listener";
 
 import Main from "./pages/Main";
 import Notes from "./pages/Notes";
+import ProtectedRoute from "./helpers/ProtectedRoute";
 
 const Login = lazy(() => import("./pages/Login"));
 
@@ -36,11 +37,17 @@ function App() {
             <Switch>
               <Route path="/login" component={Login} />
               <Route path="/signup" component={SignUp} />
-              <Route path="/dashboard">
+              {/* <Route path="/dashboard">
                 <Dashboard user={user}>
                   <Main />
                 </Dashboard>
-              </Route>
+              </Route> */}
+
+<ProtectedRoute user={user} path="/dashboard" exact>
+              <Dashboard >
+                <Main />
+                </Dashboard>
+            </ProtectedRoute>
 
               <Route path="/allusers">
                 <Dashboard user={user}>
