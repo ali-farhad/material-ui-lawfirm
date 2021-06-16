@@ -6,8 +6,7 @@ import { Paper, Button } from "@material-ui/core";
 import { getUserByUserId } from "../services/firebase";
 import { useAlert } from "react-alert";
 
-import StripeCheckout from "react-stripe-checkout";
-import axios from "axios";
+
 
 const useStyles = makeStyles((theme) => ({
   paperInfo: {
@@ -52,23 +51,8 @@ export default function Main({ user }) {
     }
   }, []);
 
-  async function handleToken(token, addresses) {
-    const response = await axios.post(
-      "https://fpcut.sse.codesandbox.io/checkout",
-      {
-        token,
-        product,
-      }
-    );
 
-    const { status } = response.data;
-    if (status === "success") {
-      alert.success("Payment successfull!");
-    } else {
-      alert.error("Something Went Wrong");
-      console.log(status);
-    }
-  }
+
 
   return (
     <div className={classes.drawerHeader}>
@@ -85,12 +69,7 @@ export default function Main({ user }) {
             Buy Membership
           </Button>
 
-          <StripeCheckout
-            stripeKey="pk_test_51J2ip8G0xa05mnESEsclJgXRqACcGlXWqQmJQeUCech38cpFz0kU494tacbGuN2sa9ycqDqP5IggipVsUGg1eWBi00phoUS8WD"
-            token={handleToken}
-            amount={product.price * 100}
-            name={product.name}
-          ></StripeCheckout>
+  
         </Paper>
       ) : null}
 

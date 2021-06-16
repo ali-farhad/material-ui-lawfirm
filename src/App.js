@@ -11,6 +11,7 @@ import useAuthListener from "./hooks/use-auth-listener";
 import Main from "./pages/Main";
 import Notes from "./pages/Notes";
 import ProtectedRoute from "./helpers/ProtectedRoute";
+import StripePaymentSuccess from "./pages/StripePaymentSuccess";
 
 const Login = lazy(() => import("./pages/Login"));
 
@@ -49,15 +50,7 @@ function App() {
                 </Dashboard>
               </ProtectedRoute>
 
-              {/* <Route path="/allusers">
-                <Dashboard user={user}>
-                  <AllUsers />
-                </Dashboard>
-              </Route> */}
-
-              {/* <Route path="/allusers">
-                <AllUsers />
-              </Route> */}
+        
 
               <ProtectedRoute user={user} path="/myprofile" exact>
                 <Dashboard user={user}>
@@ -70,6 +63,13 @@ function App() {
                   <Notes />
                 </Dashboard>
               </Route>
+
+              <Route path="/success">
+                <Dashboard user={user}>
+                  <StripePaymentSuccess/>
+                </Dashboard>
+              </Route>
+
             </Switch>
           </Suspense>
         </Router>
