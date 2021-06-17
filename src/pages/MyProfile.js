@@ -94,6 +94,10 @@ const useStyles = makeStyles((theme) => ({
   test: {
     marginTop: "5em",
   },
+  TableWrapper: {
+    maxWidth: "96.0%",
+    margin: "0 auto",
+  },
 }));
 
 export default function MyProfile({ user }) {
@@ -158,7 +162,7 @@ export default function MyProfile({ user }) {
       firebase
         .firestore()
         .collection("profiles")
-        .doc(`${user.displayName}`)
+        .doc(`${user.uid}`)
         .set({
           userId: user.uid,
           ...values,
@@ -213,7 +217,7 @@ export default function MyProfile({ user }) {
   const { userFormData, isLoading } = useFormValues(user.uid);
 
   return (
-    <>
+    <div className={classes.TableWrapper}>
       <div className={classes.test} />
       {isLoading && <Skeleton className={classes.loading} count={15} />}
 
@@ -240,7 +244,7 @@ export default function MyProfile({ user }) {
             </Stepper>
           </div>
 
-          <React.Fragment>
+          <div className={classes.TableWrapper}>
             {activeStep === steps.length ? (
               // <CheckoutSuccess />
               <div>wow</div>
@@ -288,9 +292,9 @@ export default function MyProfile({ user }) {
                 )}
               </Formik>
             )}
-          </React.Fragment>
+          </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

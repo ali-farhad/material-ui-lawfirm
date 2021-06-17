@@ -3,17 +3,20 @@ import { getUserByUserId } from "../services/firebase";
 
 export default function useUser(userId) {
   const [activeUser, setActiveUser] = useState();
+  const [isLoading, setIsLoading] = useState(null);
 
   useEffect(() => {
     async function getUserObjByUserId(userId) {
       const [user] = await getUserByUserId(userId);
       setActiveUser(user || {});
+      setIsLoading(false);
     }
 
     if (userId) {
+      setIsLoading(true);
       getUserObjByUserId(userId);
     }
   }, [userId]);
 
-  return { user: activeUser, setActiveUser };
+  return { user: activeUser, setActiveUser, isLoading };
 }

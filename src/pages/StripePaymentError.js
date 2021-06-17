@@ -2,16 +2,11 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { Paper, Button } from "@material-ui/core";
-import DoneAllOutlinedIcon from "@material-ui/icons/DoneAllOutlined";
+import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import { deepOrange } from "@material-ui/core/colors";
-
-import { getUserByUserId } from "../services/firebase";
 
 import { useAlert } from "react-alert";
 import { Link } from "react-router-dom";
-
-import useUser from "../hooks/use-user";
-import { firebase, FieldValue } from "../libs/firebase";
 
 const useStyles = makeStyles((theme) => ({
   paperInfo: {},
@@ -46,55 +41,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function StripePaymentSuccess({ user: n }) {
+export default function StripePaymentError() {
   const classes = useStyles();
   const alert = useAlert();
-
-  const { user: userData, isLoading } = useUser(n.uid);
-
-  // console.log("WWW", userData);
-
-  useEffect(() => {
-    const UpdateUser = async () => {
-      try {
-        return firebase
-          .firestore()
-          .collection("users")
-          .doc(userData.docId)
-          .update({
-            accountType: "standard",
-          })
-          .then(() => {
-            console.log("Document successfully updated!");
-          })
-          .catch((error) => {
-            // The document probably doesn't exist.
-            console.error("Error updating document: ", error);
-          });
-      } catch (error) {
-        console.log("fail silently");
-      }
-    };
-
-    console.log("Loading", isLoading);
-
-    if (isLoading) {
-      UpdateUser();
-    }
-  }, [isLoading, userData]);
 
   return (
     <div className={classes.drawerHeader}>
       <Paper classes={{ root: classes.paperInfo }} className={classes.warning}>
         <div className={classes.msgWrapper}>
-          <DoneAllOutlinedIcon
+          <CloseOutlinedIcon
             fontSize="large"
             style={{ fontSize: "5rem", margin: "0 1rem" }}
           />
 
           <Typography variant="h6">
-            Payment Successfull! Your Account has been upgraded to Standard
-            Plan.
+            Payment Error! Something Went Wrong!
           </Typography>
         </div>
         <Typography variant="subtitle2" className={classes.goBack}>

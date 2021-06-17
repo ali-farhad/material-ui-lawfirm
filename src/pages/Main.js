@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { Paper, Button } from "@material-ui/core";
+import { Paper, Button, CircularProgress } from "@material-ui/core";
 
 import { getUserByUserId } from "../services/firebase";
 import { useAlert } from "react-alert";
 
+import { firebase, FieldValue } from "../libs/firebase";
 
-
+import { loadStripe } from "@stripe/stripe-js";
+const stripePromise = loadStripe(
+  "pk_test_51J2ip8G0xa05mnESEsclJgXRqACcGlXWqQmJQeUCech38cpFz0kU494tacbGuN2sa9ycqDqP5IggipVsUGg1eWBi00phoUS8WD"
+);
 const useStyles = makeStyles((theme) => ({
   paperInfo: {
     padding: ".9em",
@@ -27,11 +31,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Main({ user }) {
+export default function Main({ user, setAllowPayment }) {
   const classes = useStyles();
   const alert = useAlert();
 
   const [userData, setUserData] = useState(null);
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   const [product] = useState({
     name: "dextera standard",
@@ -51,8 +56,29 @@ export default function Main({ user }) {
     }
   }, []);
 
+  async function handleMembership() {
+    setAllowPayment("true");
+    setPaymentLoading("true");
+    const stripe = await stripePromise;
 
+    const response = await fetch(
+      "https://k80qj.sse.codesandbox.io/create-checkout-session?name=Dextera%20Standard%20Membership&price=500",
+      {
+        method: "POST",
+      }
+    );
 
+    const session = await response.json();
+    const result = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    if (result.error) {
+      // If `redirectToCheckout` fails due to a browser or network
+      // error, display the localized error message to your customer
+      // using `result.error.message`.
+    }
+  }
 
   return (
     <div className={classes.drawerHeader}>
@@ -65,11 +91,16 @@ export default function Main({ user }) {
             Warning: Your account is limited due to registering with social
             email. in order to get full access, please buy membership!
           </Typography>
-          <Button className={classes.buyBtn} variant="contained">
+          <Button
+            onClick={handleMembership}
+            className={classes.buyBtn}
+            variant="contained"
+          >
             Buy Membership
+            {paymentLoading && (
+              <CircularProgress style={{ margin: "0 1rem" }} size={24} />
+            )}
           </Button>
-
-  
         </Paper>
       ) : null}
 

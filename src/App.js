@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import ReactLoader from "./components/loader";
 import { ThemeProvider } from "@material-ui/core";
 
@@ -11,7 +11,9 @@ import useAuthListener from "./hooks/use-auth-listener";
 import Main from "./pages/Main";
 import Notes from "./pages/Notes";
 import ProtectedRoute from "./helpers/ProtectedRoute";
+import PaymentRoute from "./helpers/PaymentRoute";
 import StripePaymentSuccess from "./pages/StripePaymentSuccess";
+import StripePaymentError from "./pages/StripePaymentError";
 
 const Login = lazy(() => import("./pages/Login"));
 
@@ -30,6 +32,8 @@ const MyProfile = lazy(() => import("./pages/MyProfile"));
 
 function App() {
   const { user } = useAuthListener();
+  const [allowPayment, setAllowPayment] = useState(false);
+
   return (
     <UserContext.Provider value={{ user }}>
       <ThemeProvider theme={theme}>
@@ -46,11 +50,9 @@ function App() {
 
               <ProtectedRoute user={user} path="/dashboard" exact>
                 <Dashboard user={user}>
-                  <Main />
+                  <Main setAllowPayment={setAllowPayment} />
                 </Dashboard>
               </ProtectedRoute>
-
-        
 
               <ProtectedRoute user={user} path="/myprofile" exact>
                 <Dashboard user={user}>
@@ -64,12 +66,17 @@ function App() {
                 </Dashboard>
               </Route>
 
-              <Route path="/success">
+              <Route path="/payment-success">
                 <Dashboard user={user}>
-                  <StripePaymentSuccess/>
+                  <StripePaymentSuccess />
                 </Dashboard>
               </Route>
 
+              <PaymentRoute allowPayment={true} path="/payment-error" exact>
+                <Dashboard user={user}>
+                  <StripePaymentError />
+                </Dashboard>
+              </PaymentRoute>
             </Switch>
           </Suspense>
         </Router>

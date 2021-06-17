@@ -1,7 +1,11 @@
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { deepOrange } from "@material-ui/core/colors";
 
 import btnBg from "./assets/btnBg.png";
 const theme = createMuiTheme({
+  palette: {
+    primary: deepOrange,
+  },
   typography: {
     fontFamily: "Poppins",
     fontWeightLight: 400,
