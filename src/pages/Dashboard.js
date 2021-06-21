@@ -58,8 +58,6 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    backgroundColor: theme.palette.common.white,
-    color: "black",
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -68,8 +66,6 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    backgroundColor: theme.palette.common.white,
-    color: "black",
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -111,9 +107,9 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
-  margin: {
-    color: "black",
-  },
+  // margin: {
+  //   color: "black",
+  // },
   paperInfo: {
     padding: "3em",
   },
@@ -198,6 +194,7 @@ export default function Dashboard(props) {
         //   [classes.appBarShift]: open,
         // })}
         className={open ? classes.appBarShift : classes.appBar}
+        color="auto"
       >
         <Toolbar>
           <IconButton
@@ -209,7 +206,12 @@ export default function Dashboard(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap style={{ flexGrow: 1 }}>
+          <Typography
+            color="inherit"
+            variant="h6"
+            noWrap
+            style={{ flexGrow: 1 }}
+          >
             {loggedInUser ? (
               user ? (
                 `Dashboard - welcome, ${user.username}!`

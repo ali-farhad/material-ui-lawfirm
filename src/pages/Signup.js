@@ -145,6 +145,9 @@ export default function SignUpSide() {
           displayName: username,
         });
 
+        const newUser = createdUserResult.user.sendEmailVerification();
+        console.log(newUser);
+
         // firebase user collection (create a document)
         await firebase
           .firestore()

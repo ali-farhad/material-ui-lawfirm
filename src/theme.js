@@ -5,6 +5,7 @@ import btnBg from "./assets/btnBg.png";
 const theme = createMuiTheme({
   palette: {
     primary: deepOrange,
+    // type: "dark",
   },
   typography: {
     fontFamily: "Poppins",

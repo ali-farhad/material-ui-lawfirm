@@ -3,29 +3,24 @@ import { Route, Redirect } from "react-router-dom";
 import { useAlert } from "react-alert";
 
 export default function PaymentRoute({ allowPayment, children, ...rest }) {
-  useEffect(() => {
-    console.log("mounted");
-
-    console.log("unmounted");
-  }, []);
-
   const alert = useAlert();
 
+  const check = JSON.parse(localStorage.getItem("page"));
   return (
     <Route
       {...rest}
       render={({ location }) => {
-        if (allowPayment) {
+        if (check === "allow") {
           return React.cloneElement(children, { allowPayment });
         }
 
-        if (!allowPayment) {
-          alert.error("Unauthorized: Something Went Wrong");
+        if (!check !== "allow") {
+          // alert.error("Unauthorized: Something Went Wrong");
 
           return (
             <Redirect
               to={{
-                pathname: "/login",
+                pathname: "/dashboard",
                 state: { from: location },
               }}
             />

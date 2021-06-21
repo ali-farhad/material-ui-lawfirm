@@ -7,6 +7,7 @@ import theme from "./theme";
 
 import UserContext from "./context/user";
 import useAuthListener from "./hooks/use-auth-listener";
+import usePersistedState from "./helpers/usePersistedState";
 
 import Main from "./pages/Main";
 import Notes from "./pages/Notes";
@@ -14,8 +15,6 @@ import ProtectedRoute from "./helpers/ProtectedRoute";
 import PaymentRoute from "./helpers/PaymentRoute";
 import StripePaymentSuccess from "./pages/StripePaymentSuccess";
 import StripePaymentError from "./pages/StripePaymentError";
-
-const Login = lazy(() => import("./pages/Login"));
 
 // const Login = lazy(() => {
 //   return Promise.all([
@@ -26,14 +25,18 @@ const Login = lazy(() => import("./pages/Login"));
 // });
 
 const SignUp = lazy(() => import("./pages/Signup"));
+const Login = lazy(() => import("./pages/Login"));
+const ForgetPassword = lazy(() => import("./pages/ForgetPassword"));
+
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const AllUsers = lazy(() => import("./pages/adminPages/AllUsers"));
 const MyProfile = lazy(() => import("./pages/MyProfile"));
+const EmailVerification = lazy(() => import("./pages/NotVerified"));
 
 function App() {
   const { user } = useAuthListener();
-  const [allowPayment, setAllowPayment] = useState(false);
 
+  const [payAllowed, setPayAllowed] = usePersistedState("page", "allow");
   return (
     <UserContext.Provider value={{ user }}>
       <ThemeProvider theme={theme}>
@@ -42,6 +45,9 @@ function App() {
             <Switch>
               <Route path="/login" component={Login} />
               <Route path="/signup" component={SignUp} />
+              <Route path="/forget-password" component={ForgetPassword} />
+              <Route path="/email-verification" component={EmailVerification} />
+
               {/* <Route path="/dashboard">
                 <Dashboard user={user}>
                   <Main />
@@ -49,8 +55,8 @@ function App() {
               </Route> */}
 
               <ProtectedRoute user={user} path="/dashboard" exact>
-                <Dashboard user={user}>
-                  <Main setAllowPayment={setAllowPayment} />
+                <Dashboard>
+                  <Main />
                 </Dashboard>
               </ProtectedRoute>
 
@@ -66,13 +72,13 @@ function App() {
                 </Dashboard>
               </Route>
 
-              <Route path="/payment-success">
+              <PaymentRoute path="/payment-success" exact>
                 <Dashboard user={user}>
                   <StripePaymentSuccess />
                 </Dashboard>
-              </Route>
+              </PaymentRoute>
 
-              <PaymentRoute allowPayment={true} path="/payment-error" exact>
+              <PaymentRoute path="/payment-error" exact>
                 <Dashboard user={user}>
                   <StripePaymentError />
                 </Dashboard>

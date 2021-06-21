@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme) => ({
   },
 
   warning: {
-    color: theme.palette.getContrastText("#00e676"),
-    backgroundColor: "#00e676",
+    color: theme.palette.getContrastText("#72e6ad"),
+    backgroundColor: "#72e6ad",
     margin: "1rem 0",
     padding: "3rem",
   },
@@ -41,9 +41,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function StripePaymentError() {
+export default function StripePaymentError({ setAllowPayment, allowPayment }) {
   const classes = useStyles();
   const alert = useAlert();
+  setAllowPayment(false);
+  console.log("Error page", allowPayment);
 
   return (
     <div className={classes.drawerHeader}>

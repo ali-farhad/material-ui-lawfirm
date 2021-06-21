@@ -31,7 +31,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Main({ user, setAllowPayment }) {
+export default function Main({ user }) {
+  // let test = JSON.parse(localStorage.getItem("page"));
+
+  localStorage.removeItem("page");
+  localStorage.setItem("page", JSON.stringify("xyz"));
+
+  // localStorage.setItem("page", JSON.stringify("notallowed"));
+
   const classes = useStyles();
   const alert = useAlert();
 
@@ -57,8 +64,9 @@ export default function Main({ user, setAllowPayment }) {
   }, []);
 
   async function handleMembership() {
-    setAllowPayment("true");
-    setPaymentLoading("true");
+    localStorage.removeItem("page");
+    localStorage.setItem("page", JSON.stringify("allow"));
+
     const stripe = await stripePromise;
 
     const response = await fetch(

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { Paper, Button } from "@material-ui/core";
-import DoneAllOutlinedIcon from "@material-ui/icons/DoneAllOutlined";
+import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import { deepOrange } from "@material-ui/core/colors";
 
 import { getUserByUserId } from "../services/firebase";
@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
   },
 
   warning: {
-    color: theme.palette.getContrastText("#00e676"),
-    backgroundColor: "#00e676",
+    color: theme.palette.getContrastText("#72e6ad"),
+    backgroundColor: "#72e6ad",
     margin: "1rem 0",
     padding: "3rem",
   },
@@ -46,60 +46,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function StripePaymentSuccess({
-  user: n,
-  allowPayment,
-  setAllowPayment,
-}) {
+export default function Notverified() {
   const classes = useStyles();
-  const alert = useAlert();
-
-  const { user: userData, isLoading } = useUser(n.uid);
-
-  // console.log("WWW", userData);
-
-  useEffect(() => {
-    const UpdateUser = async () => {
-      try {
-        return firebase
-          .firestore()
-          .collection("users")
-          .doc(userData.docId)
-          .update({
-            accountType: "standard",
-          })
-          .then(() => {
-            console.log("Document successfully updated!");
-          })
-          .catch((error) => {
-            console.error("Error updating document: ", error);
-          });
-      } catch (error) {
-        console.log("fail silently");
-      }
-    };
-
-    console.log("Loading", isLoading);
-
-    if (isLoading) {
-      UpdateUser();
-    }
-  }, [isLoading, userData]);
-
-  // setAllowPayment(false);
 
   return (
     <div className={classes.drawerHeader}>
       <Paper classes={{ root: classes.paperInfo }} className={classes.warning}>
         <div className={classes.msgWrapper}>
-          <DoneAllOutlinedIcon
+          <CloseOutlinedIcon
             fontSize="large"
             style={{ fontSize: "5rem", margin: "0 1rem" }}
           />
 
           <Typography variant="h6">
-            Payment Successfull! Your Account has been upgraded to Standard
-            Plan.
+            Please check your email address for verification
           </Typography>
         </div>
         <Typography variant="subtitle2" className={classes.goBack}>

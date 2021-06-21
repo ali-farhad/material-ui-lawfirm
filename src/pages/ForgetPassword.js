@@ -80,13 +80,9 @@ const validationSchema = yup.object({
     .string("Enter your email address")
     .email("Enter a valid email address")
     .required("Email is required"),
-  password: yup
-    .string("Enter your password")
-    .min(6, "Password should be of minimum 6 characters length")
-    .required("Password is required"),
 });
 
-export default function SignInSide() {
+export default function ForgetPassword() {
   const classes = useStyles();
   const history = useHistory();
   const alert = useAlert();
@@ -96,37 +92,35 @@ export default function SignInSide() {
   const formik = useFormik({
     initialValues: {
       email: "",
-      password: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      const { email, password } = values;
+      const { email } = values;
 
       try {
-        await firebase.auth().signInWithEmailAndPassword(email, password);
-        history.push("/dashboard");
+        firebase
+          .auth()
+          .sendPasswordResetEmail(email)
+          .then(() => {
+            // Password reset email sent!
+            alert.success("Reset Email sent! Check your Email Address");
+          })
+          .catch((error) => {
+            if (error.code === "auth/user-not-found") {
+              alert.error("This User does not exist!");
+              return;
+            }
+            alert.error(error.message);
+          });
       } catch (error) {
-        console.log(error);
-        switch (error.code) {
-          case "auth/wrong-password":
-            alert.error("username and/or Password is incorrect!");
-            break;
-          case "auth/user-not-found":
-            alert.error("This User does not exist. Please Sign Up!");
-            break;
-          default:
-            alert.error("Something went wrong!");
-        }
+        alert.error(error.message);
         values.email = "";
-        values.password = "";
       }
-
-      // console.log(values);
     },
   });
 
   useEffect(() => {
-    document.title = "Login - Dextra";
+    document.title = "Forgot Password - Dextra";
   }, []);
 
   return (
@@ -159,7 +153,7 @@ export default function SignInSide() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Reset Password
           </Typography>
           <form className={classes.form} onSubmit={formik.handleSubmit}>
             <TextField
@@ -169,7 +163,7 @@ export default function SignInSide() {
               fullWidth
               id="email"
               label="Email Address"
-              autoComplete="email"
+              autoComplete="off"
               autoFocus
               value={formik.values.email}
               onChange={formik.handleChange}
@@ -177,36 +171,18 @@ export default function SignInSide() {
               helperText={formik.touched.email && formik.errors.email}
             />
 
-            <TextField
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              error={formik.touched.password && Boolean(formik.errors.password)}
-              helperText={formik.touched.password && formik.errors.password}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               className={classes.submit}
             >
-              Sign In
+              Submit
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link to="/forget-password" variant="body2">
-                  Forgot password?
+                <Link to="/login" variant="body2">
+                  Got an account ? Login
                 </Link>
               </Grid>
               <Grid item>
