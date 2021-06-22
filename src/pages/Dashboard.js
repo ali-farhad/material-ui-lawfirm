@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 0,
   },
   margin: {
-    color: "black",
+    color: "white",
   },
 
   defaults: {
@@ -132,7 +132,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard(props) {
-  const { children, handleThemeChange, darkState } = props;
+  const { children, changeTheme, isDark } = props;
   const classes = useStyles();
   const alert = useAlert();
   const history = useHistory();
@@ -172,7 +172,7 @@ export default function Dashboard(props) {
   };
 
   const toggleTheme = () => {
-    handleThemeChange()
+    changeTheme()
   }
 
   const { user: loggedInUser } = useContext(UserContext);
@@ -232,7 +232,7 @@ export default function Dashboard(props) {
               <Skeleton />
             )}
           </Typography>
-          <IconButton onClick={toggleTheme} aria-label="delete" className={darkState ? classes.margin : classes.defaults}>
+          <IconButton onClick={toggleTheme} aria-label="delete" className={isDark ? classes.margin : classes.defaults}>
             <Brightness4Icon />
           </IconButton>
 

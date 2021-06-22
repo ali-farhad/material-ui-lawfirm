@@ -37,13 +37,20 @@ const EmailVerification = lazy(() => import("./pages/NotVerified"));
 
 function App() {
   const { user } = useAuthListener();
-  const [darkState, setDarkState] = useState(false);
-  const palletType = darkState ? "dark" : "light";
+  const [darkTheme, setDarkTheme] = useState(true);
+ 
+  let isDark = true;
+  if(darkTheme === 'dark') {
+    isDark = true;
+  } else {
+    isDark = false;
+  }
+  // const palletType = darkState ? "dark" : "light";
 
   const theme = createMuiTheme({
     palette: {
       primary: deepOrange,
-      type: palletType,
+      type: darkTheme ? "dark" : "light"
     },
     typography: {
       fontFamily: "Poppins",
@@ -60,8 +67,18 @@ function App() {
   });
 
   const [payAllowed, setPayAllowed] = usePersistedState("page", "allow");
-  const handleThemeChange = () => {
-    setDarkState(!darkState);
+  
+
+  useEffect(() => {
+    const themeType = localStorage.getItem("dark") || "dark";
+    if (themeType != "dark") {
+      setDarkTheme(false);
+      }
+  }, []);
+
+  const changeTheme = () => {
+    localStorage.setItem("dark", darkTheme ? "light" : "dark");
+    setDarkTheme(!darkTheme);
   };
   
   
@@ -84,13 +101,13 @@ function App() {
               </Route> */}
 
               <ProtectedRoute user={user} path="/dashboard" exact>
-                <Dashboard darkState={darkState} handleThemeChange={handleThemeChange}>
+                <Dashboard isDark={isDark} changeTheme={changeTheme}>
                   <Main />
                 </Dashboard>
               </ProtectedRoute>
 
               <ProtectedRoute user={user} path="/myprofile" exact>
-                <Dashboard handleThemeChange={handleThemeChange} user={user}>
+                <Dashboard changeTheme={changeTheme} user={user}>
                   <MyProfile />
                 </Dashboard>
               </ProtectedRoute>
