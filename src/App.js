@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { lazy, Suspense, useState, useEffect } from "react";
 import ReactLoader from "./components/loader";
-import { ThemeProvider } from "@material-ui/core";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { deepOrange } from "@material-ui/core/colors";
+import btnBg from "./assets/btnBg.png";
 
-import theme from "./theme";
+// import theme from "./theme";
 
 import UserContext from "./context/user";
 import useAuthListener from "./hooks/use-auth-listener";
@@ -35,8 +37,35 @@ const EmailVerification = lazy(() => import("./pages/NotVerified"));
 
 function App() {
   const { user } = useAuthListener();
+  const [darkState, setDarkState] = useState(false);
+  const palletType = darkState ? "dark" : "light";
+
+  const theme = createMuiTheme({
+    palette: {
+      primary: deepOrange,
+      type: palletType,
+    },
+    typography: {
+      fontFamily: "Poppins",
+      fontWeightLight: 400,
+      fontWeightRegular: 500,
+      fontWeightMedium: 600,
+      fontWeightBold: 700,
+    },
+    customBtn: {
+      background: `url(${btnBg}) no-repeat`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    },
+  });
 
   const [payAllowed, setPayAllowed] = usePersistedState("page", "allow");
+  const handleThemeChange = () => {
+    setDarkState(!darkState);
+  };
+  
+  
+  
   return (
     <UserContext.Provider value={{ user }}>
       <ThemeProvider theme={theme}>
@@ -55,13 +84,13 @@ function App() {
               </Route> */}
 
               <ProtectedRoute user={user} path="/dashboard" exact>
-                <Dashboard>
+                <Dashboard darkState={darkState} handleThemeChange={handleThemeChange}>
                   <Main />
                 </Dashboard>
               </ProtectedRoute>
 
               <ProtectedRoute user={user} path="/myprofile" exact>
-                <Dashboard user={user}>
+                <Dashboard handleThemeChange={handleThemeChange} user={user}>
                   <MyProfile />
                 </Dashboard>
               </ProtectedRoute>

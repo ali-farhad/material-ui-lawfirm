@@ -107,14 +107,20 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
-  // margin: {
-  //   color: "black",
-  // },
+  margin: {
+    color: "black",
+  },
+
+  defaults: {
+    color: "black"
+  },
   paperInfo: {
     padding: "3em",
   },
   imageContainer: {
-    padding: 0,
+    background: "white",
+    padding: "0 1rem",
+    // padding: "0 .2rem",
     "&:hover": {
       backgroundColor: "transparent",
     },
@@ -126,7 +132,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard(props) {
-  const { children } = props;
+  const { children, handleThemeChange, darkState } = props;
   const classes = useStyles();
   const alert = useAlert();
   const history = useHistory();
@@ -165,6 +171,10 @@ export default function Dashboard(props) {
     setBellEl(null);
   };
 
+  const toggleTheme = () => {
+    handleThemeChange()
+  }
+
   const { user: loggedInUser } = useContext(UserContext);
 
   const { user } = useUser(loggedInUser?.uid);
@@ -194,7 +204,7 @@ export default function Dashboard(props) {
         //   [classes.appBarShift]: open,
         // })}
         className={open ? classes.appBarShift : classes.appBar}
-        color="auto"
+        color="inherit"
       >
         <Toolbar>
           <IconButton
@@ -222,7 +232,7 @@ export default function Dashboard(props) {
               <Skeleton />
             )}
           </Typography>
-          <IconButton aria-label="delete" className={classes.margin}>
+          <IconButton onClick={toggleTheme} aria-label="delete" className={darkState ? classes.margin : classes.defaults}>
             <Brightness4Icon />
           </IconButton>
 

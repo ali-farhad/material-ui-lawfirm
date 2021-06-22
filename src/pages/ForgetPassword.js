@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: "#1464a3",
+    backgroundColor: theme.palette.primary.main
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -182,12 +182,12 @@ export default function ForgetPassword() {
             <Grid container>
               <Grid item xs>
                 <Link to="/login" variant="body2">
-                  Got an account ? Login
+                   Login
                 </Link>
               </Grid>
               <Grid item>
                 <Link to="/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                  {" Sign Up"}
                 </Link>
               </Grid>
             </Grid>

@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: "#1464a3",
+    backgroundColor: theme.palette.primary.main
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -269,7 +269,7 @@ export default function SignUpSide() {
                 </Button>
                 <Grid container>
                   <Grid item xs>
-                    <Link to="#" variant="body2">
+                    <Link to="/forget-password" variant="body2">
                       Forgot password?
                     </Link>
                   </Grid>

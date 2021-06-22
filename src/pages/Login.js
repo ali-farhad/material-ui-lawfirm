@@ -25,6 +25,7 @@ import * as yup from "yup";
 
 import FirebaseContext from "../context/firebase";
 import { useAlert } from "react-alert";
+import { StayPrimaryLandscape } from "@material-ui/icons";
 
 function Copyright() {
   return (
@@ -61,7 +62,8 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: "#1464a3",
+    // backgroundColor: "#1464a3",
+    backgroundColor: theme.palette.primary.main
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -70,7 +72,6 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     ...theme.customBtn,
     margin: theme.spacing(3, 0, 2),
-    // backgroundColor: "#1464a3",
     color: "white",
   },
 }));
