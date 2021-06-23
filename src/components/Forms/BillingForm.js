@@ -16,9 +16,9 @@ export default function BillingForm(props) {
     formField: {
       bankAcNum,
       routingNum,
-      cCardNum,
-      cSecCode,
-      expMonthYear,
+      // cCardNum,
+      // cSecCode,
+      // expMonthYear,
       bCountry,
       bCity,
       bState,
@@ -49,7 +49,7 @@ export default function BillingForm(props) {
             <InputField name={routingNum.name} label={routingNum.label} />
           </Grid>
 
-          <Grid container spacing={2} style={{ padding: "1em 2em" }}>
+          {/* <Grid container spacing={2} style={{ padding: "1em 2em" }}>
             <Grid item xs={12} md={4}>
               <InputField name={cCardNum.name} label={cCardNum.label} />
             </Grid>
@@ -59,7 +59,7 @@ export default function BillingForm(props) {
             <Grid item xs={12} md={4}>
               <InputField name={expMonthYear.name} label={expMonthYear.label} />
             </Grid>
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} style={{ padding: "1em 2em" }}>
             <InputField name={bCountry.name} label={bCountry.label} />

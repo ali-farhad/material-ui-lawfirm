@@ -24,10 +24,14 @@ const useStyles = makeStyles((theme) => ({
   },
 
   warning: {
-    color: theme.palette.getContrastText("#00e676"),
-    backgroundColor: "#00e676",
-    margin: "1rem 0",
+    color: theme.palette.getContrastText("#f50057"),
+    backgroundColor: "#f50057",
     padding: "3rem",
+    // margin: "1rem 0",
+    [theme.breakpoints.down("sm")]: {
+      margin: "2em .7em",
+      marginTop: "6em",
+    },
   },
 
   buyBtn: {
@@ -104,7 +108,7 @@ export default function StripePaymentSuccess({
         </div>
         <Typography variant="subtitle2" className={classes.goBack}>
           Go back to{" "}
-          <Link style={{ color: "#ff5722" }} to="/dashboard">
+          <Link style={{ color: "white", fontWeight: "bold" }} to="/dashboard">
             dashboard
           </Link>
         </Typography>

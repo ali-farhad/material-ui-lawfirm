@@ -17,7 +17,6 @@ import { Hidden } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import singupImg from "../assets/signup.png";
 import logo from "../assets/logo.png";
 
 import { useFormik } from "formik";
@@ -27,57 +26,21 @@ import FirebaseContext from "../context/firebase";
 import { useAlert } from "react-alert";
 import { StayPrimaryLandscape } from "@material-ui/icons";
 
+import signUpImg from "../assets/signup.png";
+import signUpImgLight from "../assets/signup_light.png";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" to="https://material-ui.com/">
-        Your Website
+      <Link style={{ color: "#ff5722" }} to="https://dextera.com/">
+        Dextera
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
     </Typography>
   );
 }
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: "100vh",
-  },
-  image: {
-    backgroundImage: `url(${singupImg})`,
-    backgroundRepeat: "no-repeat",
-    backgroundColor:
-      theme.palette.type === "light"
-        ? theme.palette.grey[50]
-        : theme.palette.grey[900],
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  },
-  paper: {
-    margin: theme.spacing(8, 4),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    // backgroundColor: "#1464a3",
-    backgroundColor: theme.palette.primary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    ...theme.customBtn,
-    margin: theme.spacing(3, 0, 2),
-    color: "white",
-  },
-   icons: {
-    maxWidth: "48px"
-  }
-}));
 
 const validationSchema = yup.object({
   email: yup
@@ -90,7 +53,60 @@ const validationSchema = yup.object({
     .required("Password is required"),
 });
 
-export default function SignInSide() {
+export default function SignInSide({ isDark }) {
+  const [bgImg, setBgImg] = useState("");
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      height: "100vh",
+    },
+    image: {
+      backgroundImage: `url(${bgImg})`,
+      backgroundRepeat: "no-repeat",
+      backgroundColor:
+        theme.palette.type === "light"
+          ? theme.palette.grey[50]
+          : theme.palette.grey[900],
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    },
+    paper: {
+      margin: theme.spacing(8, 4),
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    avatar: {
+      margin: theme.spacing(1),
+      // backgroundColor: "#1464a3",
+      backgroundColor: theme.palette.primary.main,
+    },
+    form: {
+      width: "100%", // Fix IE 11 issue.
+      marginTop: theme.spacing(1),
+    },
+    submit: {
+      ...theme.customBtn,
+      margin: theme.spacing(3, 0, 2),
+      color: "white",
+    },
+    icons: {
+      maxWidth: "48px",
+    },
+
+    links: {
+      color: "#ff5722",
+      margin: ".3em 0",
+      display: "inline-block",
+    },
+
+    linksWrapper: {
+      [theme.breakpoints.down("sm")]: {
+        flexDirection: "column",
+      },
+    },
+  }));
+
   const classes = useStyles();
   const history = useHistory();
   const alert = useAlert();
@@ -131,26 +147,34 @@ export default function SignInSide() {
 
   useEffect(() => {
     document.title = "Login - Dextra";
-  }, []);
 
+    if (isDark) {
+      setBgImg(signUpImg);
+    } else {
+      setBgImg(signUpImgLight);
+    }
+  }, [isDark]);
 
   const auth = firebase.auth();
 
-async function signInWithGoogle() {
-    auth.signInWithPopup(googleProvider).then((res) => {
-    
-    const newUser = res.user;
+  async function signInWithGoogle() {
+    auth
+      .signInWithPopup(googleProvider)
+      .then((res) => {
+        const newUser = res.user;
 
-    const checkDomains = ["gmail.com", "yahoo.com", "outlook.com"];
-    const domain = newUser.email.substring(newUser.email.lastIndexOf("@") + 1);
-    let accountType = "";
-    if (checkDomains.includes(domain)) {
-      accountType = "limited";
-    } else {
-      accountType = "Standard";
-    }
+        const checkDomains = ["gmail.com", "yahoo.com", "outlook.com"];
+        const domain = newUser.email.substring(
+          newUser.email.lastIndexOf("@") + 1
+        );
+        let accountType = "";
+        if (checkDomains.includes(domain)) {
+          accountType = "limited";
+        } else {
+          accountType = "Standard";
+        }
 
-          firebase
+        firebase
           .firestore()
           .collection("users")
           .add({
@@ -165,17 +189,12 @@ async function signInWithGoogle() {
             accountType: accountType,
           });
 
-           history.push("/dashboard");
-
-
-  }).catch((error) => {
-           alert.error(error.message);
-
-  })
+        history.push("/dashboard");
+      })
+      .catch((error) => {
+        alert.error(error.message);
+      });
   }
-
-
-
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -251,19 +270,34 @@ async function signInWithGoogle() {
             >
               Sign In
             </Button>
-            <Paper elevation={0} style={{display: "flex", justifyContent: "center", marginBottom: "1em"}}>
-<Button onClick={signInWithGoogle}>
-<img className={classes.icons} src="https://img.icons8.com/fluent/100/000000/google-logo.png"/>
- </Button>
- </Paper>
-            <Grid container>
+            <Paper
+              elevation={0}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "1em",
+              }}
+            >
+              <Button onClick={signInWithGoogle}>
+                <img
+                  className={classes.icons}
+                  src="https://img.icons8.com/fluent/100/000000/google-logo.png"
+                  alt="google logo for signin"
+                />
+              </Button>
+            </Paper>
+            <Grid container className={classes.linksWrapper}>
               <Grid item xs>
-                <Link to="/forget-password" variant="body2">
+                <Link
+                  className={classes.links}
+                  to="/forget-password"
+                  variant="body2"
+                >
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link to="/signup" variant="body2">
+                <Link className={classes.links} to="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

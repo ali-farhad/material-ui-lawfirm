@@ -30,8 +30,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" to="https://material-ui.com/">
-        Your Website
+      <Link style={{ color: "#ff5722" }} to="https://dextera.com/">
+        Dextera
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.primary.main
+    backgroundColor: theme.palette.primary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -72,6 +72,19 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
     // backgroundColor: "#1464a3",
     color: "white",
+  },
+
+  links: {
+    color: "#ff5722",
+    margin: ".3em 0",
+    display: "inline-block",
+  },
+
+  linksWrapper: {
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+    margin: "1rem 0",
   },
 }));
 
@@ -179,15 +192,15 @@ export default function ForgetPassword() {
             >
               Submit
             </Button>
-            <Grid container>
+            <Grid container className={classes.linksWrapper}>
               <Grid item xs>
-                <Link to="/login" variant="body2">
-                   Login
+                <Link className={classes.links} to="/login" variant="body2">
+                  {"Already a User? Login Here"}
                 </Link>
               </Grid>
               <Grid item>
-                <Link to="/signup" variant="body2">
-                  {" Sign Up"}
+                <Link className={classes.links} to="/signup" variant="body2">
+                  {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>

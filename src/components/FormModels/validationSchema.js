@@ -31,9 +31,9 @@ const {
     //Billing Form
     bankAcNum,
     routingNum,
-    cCardNum,
-    cSecCode,
-    expMonthYear,
+    // cCardNum,
+    // cSecCode,
+    // expMonthYear,
     bCountry,
     bCity,
     bState,
@@ -108,66 +108,66 @@ export default [
       .required(`${routingNum.requiredErrorMsg}`)
       .typeError(`${routingNum.typeErrorMsg}`),
 
-    [cCardNum.name]: Yup.number()
-      .required(`${cCardNum.requiredErrorMsg}`)
-      .typeError(`${cCardNum.typeErrorMsg}`),
+    // [cCardNum.name]: Yup.number()
+    //   .required(`${cCardNum.requiredErrorMsg}`)
+    //   .typeError(`${cCardNum.typeErrorMsg}`),
 
-    [cSecCode.name]: Yup.number()
-      .required(`${cSecCode.requiredErrorMsg}`)
-      .typeError(`${cSecCode.typeErrorMsg}`),
+    // [cSecCode.name]: Yup.number()
+    //   .required(`${cSecCode.requiredErrorMsg}`)
+    //   .typeError(`${cSecCode.typeErrorMsg}`),
 
-    [expMonthYear.name]: Yup.string()
-      .typeError("Not a valid expiration date. Example: MM/YY")
-      .max(5, "Not a valid expiration date. Example: MM/YY")
-      .matches(
-        /([0-9]{2})\/([0-9]{2})/,
-        "Not a valid expiration date. Example: MM/YY"
-      )
-      .test(
-        "test-credit-card-expiration-date",
-        "Invalid Expiration Date has past",
-        (expirationDate) => {
-          if (!expirationDate) {
-            return false;
-          }
+    // [expMonthYear.name]: Yup.string()
+    //   .typeError("Not a valid expiration date. Example: MM/YY")
+    //   .max(5, "Not a valid expiration date. Example: MM/YY")
+    //   .matches(
+    //     /([0-9]{2})\/([0-9]{2})/,
+    //     "Not a valid expiration date. Example: MM/YY"
+    //   )
+    //   .test(
+    //     "test-credit-card-expiration-date",
+    //     "Invalid Expiration Date has past",
+    //     (expirationDate) => {
+    //       if (!expirationDate) {
+    //         return false;
+    //       }
 
-          const today = new Date();
-          const monthToday = today.getMonth() + 1;
-          const yearToday = today.getFullYear().toString().substr(-2);
+    //       const today = new Date();
+    //       const monthToday = today.getMonth() + 1;
+    //       const yearToday = today.getFullYear().toString().substr(-2);
 
-          const [expMonth, expYear] = expirationDate.split("/");
+    //       const [expMonth, expYear] = expirationDate.split("/");
 
-          if (Number(expYear) < Number(yearToday)) {
-            return false;
-          } else if (
-            Number(expMonth) < monthToday &&
-            Number(expYear) <= Number(yearToday)
-          ) {
-            return false;
-          }
+    //       if (Number(expYear) < Number(yearToday)) {
+    //         return false;
+    //       } else if (
+    //         Number(expMonth) < monthToday &&
+    //         Number(expYear) <= Number(yearToday)
+    //       ) {
+    //         return false;
+    //       }
 
-          return true;
-        }
-      )
-      .test(
-        "test-credit-card-expiration-date",
-        "Invalid Expiration Month",
-        (expirationDate) => {
-          if (!expirationDate) {
-            return false;
-          }
-          const today = new Date().getFullYear().toString().substr(-2);
+    //       return true;
+    //     }
+    //   )
+    //   .test(
+    //     "test-credit-card-expiration-date",
+    //     "Invalid Expiration Month",
+    //     (expirationDate) => {
+    //       if (!expirationDate) {
+    //         return false;
+    //       }
+    //       const today = new Date().getFullYear().toString().substr(-2);
 
-          const [expMonth] = expirationDate.split("/");
+    //       const [expMonth] = expirationDate.split("/");
 
-          if (Number(expMonth) > 12) {
-            return false;
-          }
+    //       if (Number(expMonth) > 12) {
+    //         return false;
+    //       }
 
-          return true;
-        }
-      )
-      .required("Expiration date is required"),
+    //       return true;
+    //     }
+    //   )
+    //   .required("Expiration date is required"),
 
     [bCountry.name]: Yup.string(),
     [bCity.name]: Yup.string(),

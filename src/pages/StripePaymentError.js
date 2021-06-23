@@ -41,11 +41,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function StripePaymentError({ setAllowPayment, allowPayment }) {
+export default function StripePaymentError() {
   const classes = useStyles();
   const alert = useAlert();
-  setAllowPayment(false);
-  console.log("Error page", allowPayment);
 
   return (
     <div className={classes.drawerHeader}>

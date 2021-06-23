@@ -15,6 +15,10 @@ const stripePromise = loadStripe(
 const useStyles = makeStyles((theme) => ({
   paperInfo: {
     padding: ".9em",
+    margin: "1rem",
+    [theme.breakpoints.down("sm")]: {
+      margin: "2em .7em",
+    },
   },
   drawerHeader: {
     margin: "4rem 0",
@@ -23,8 +27,12 @@ const useStyles = makeStyles((theme) => ({
   warning: {
     color: theme.palette.getContrastText("#f50057"),
     backgroundColor: "#f50057",
-    margin: "1rem 0",
-    dark: "yellow"
+    // margin: "1rem 0",
+    dark: "yellow",
+    [theme.breakpoints.down("sm")]: {
+      margin: "2em .7em",
+      marginTop: "6em",
+    },
   },
 
   buyBtn: {
@@ -37,7 +45,6 @@ export default function Main({ user, isDark }) {
 
   localStorage.removeItem("page");
   localStorage.setItem("page", JSON.stringify("xyz"));
-
 
   // localStorage.setItem("page", JSON.stringify("notallowed"));
 
@@ -95,7 +102,7 @@ export default function Main({ user, isDark }) {
       {userData && userData.accountType === "limited" ? (
         <Paper
           classes={{ root: classes.paperInfo }}
-          className={!isDark ? classes.warning: null}
+          className={!isDark ? classes.warning : null}
         >
           <Typography variant="body1">
             Warning: Your account is limited due to registering with social

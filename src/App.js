@@ -38,12 +38,11 @@ const EmailVerification = lazy(() => import("./pages/NotVerified"));
 function App() {
   const { user } = useAuthListener();
   const [darkTheme, setDarkTheme] = useState(false);
- 
+
   let isDark = null;
   if (darkTheme) {
     isDark = true;
-  }
-  else {
+  } else {
     isDark = false;
   }
   // const palletType = darkState ? "dark" : "light";
@@ -51,7 +50,7 @@ function App() {
   const theme = createMuiTheme({
     palette: {
       primary: deepOrange,
-      type: darkTheme ? "dark" : "light"
+      type: darkTheme ? "dark" : "light",
     },
     typography: {
       fontFamily: "Poppins",
@@ -68,30 +67,31 @@ function App() {
   });
 
   const [payAllowed, setPayAllowed] = usePersistedState("page", "allow");
-  
 
   useEffect(() => {
     const themeType = localStorage.getItem("light") || "light";
     if (themeType != "light") {
       setDarkTheme(true);
-      }
+    }
   }, []);
 
   const changeTheme = () => {
     localStorage.setItem("light", darkTheme ? "light" : "dark");
     setDarkTheme(!darkTheme);
   };
-  
-  
-  
+
   return (
     <UserContext.Provider value={{ user }}>
       <ThemeProvider theme={theme}>
         <Router>
           <Suspense fallback={<ReactLoader />}>
             <Switch>
-              <Route path="/login" component={Login} />
-              <Route path="/signup" component={SignUp} />
+              <Route path="/login">
+                <Login isDark={isDark} />
+              </Route>
+              <Route path="/signup">
+                <SignUp isDark={isDark} />
+              </Route>
               <Route path="/forget-password" component={ForgetPassword} />
               <Route path="/email-verification" component={EmailVerification} />
 
@@ -108,7 +108,11 @@ function App() {
               </ProtectedRoute>
 
               <ProtectedRoute user={user} path="/myprofile" exact>
-                <Dashboard changeTheme={changeTheme} user={user}>
+                <Dashboard
+                  isDark={isDark}
+                  changeTheme={changeTheme}
+                  user={user}
+                >
                   <MyProfile />
                 </Dashboard>
               </ProtectedRoute>

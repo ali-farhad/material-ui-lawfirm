@@ -16,7 +16,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
-import singupImg from "../assets/login.png";
+import signUpImg from "../assets/login.png";
+import signUpImgLight from "../assets/login_light.png";
 import logo from "../assets/logo.png";
 
 import { FormHelperText, Hidden } from "@material-ui/core";
@@ -31,8 +32,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" to="https://material-ui.com/">
-        Your Website
+      <Link style={{ color: "#ff5722" }} to="https://dextera.com/">
+        Dextera
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -40,52 +41,65 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: "100vh",
-  },
-  image: {
-    backgroundImage: `url(${singupImg})`,
-    backgroundRepeat: "no-repeat",
-    backgroundColor:
-      theme.palette.type === "light"
-        ? theme.palette.grey[50]
-        : theme.palette.grey[900],
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  },
-  paper: {
-    margin: theme.spacing(8, 4),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.primary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    ...theme.customBtn,
-    margin: theme.spacing(3, 0, 2),
-    // backgroundColor: "#1464a3",
-    color: "white",
-  },
+export default function SignUpSide({ isDark }) {
+  const [bgImg, setBgImg] = useState("");
 
-  icons: {
-    maxWidth: "48px"
-  }
-}));
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      height: "100vh",
+    },
+    image: {
+      backgroundImage: `url(${bgImg})`,
+      backgroundRepeat: "no-repeat",
+      backgroundColor:
+        theme.palette.type === "light"
+          ? theme.palette.grey[50]
+          : theme.palette.grey[900],
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    },
+    paper: {
+      margin: theme.spacing(8, 4),
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    avatar: {
+      margin: theme.spacing(1),
+      backgroundColor: theme.palette.primary.main,
+    },
+    form: {
+      width: "100%", // Fix IE 11 issue.
+      marginTop: theme.spacing(1),
+    },
+    submit: {
+      ...theme.customBtn,
+      margin: theme.spacing(3, 0, 2),
+      // backgroundColor: "#1464a3",
+      color: "white",
+    },
 
-export default function SignUpSide() {
+    icons: {
+      maxWidth: "48px",
+    },
+    links: {
+      color: "#ff5722",
+      margin: ".3em 0",
+      display: "inline-block",
+    },
+
+    linksWrapper: {
+      [theme.breakpoints.down("sm")]: {
+        flexDirection: "column",
+      },
+    },
+  }));
+
   const classes = useStyles();
   const alert = useAlert();
 
   const history = useHistory();
-  const { firebase, googleProvider} = useContext(FirebaseContext);
+  const { firebase, googleProvider } = useContext(FirebaseContext);
 
   const initialValues = {
     email: "",
@@ -109,14 +123,12 @@ export default function SignUpSide() {
   useEffect(() => {
     document.title = "Sign Up - Dextra";
 
-    // async function fetchImg() {
-    //   const image = await firebase.storage().ref().child("noavatar.jpg");
-
-    //   image.getDownloadURL().then((url) => {
-    //     return url;
-    //   });
-    // }
-  }, []);
+    if (isDark) {
+      setBgImg(signUpImg);
+    } else {
+      setBgImg(signUpImgLight);
+    }
+  }, [isDark]);
 
   const handleSignUp = async (values, props) => {
     // setTimeout(() => {
@@ -177,24 +189,26 @@ export default function SignUpSide() {
     }
   };
 
-
   const auth = firebase.auth();
 
   async function signInWithGoogle() {
-    auth.signInWithPopup(googleProvider).then((res) => {
-    
-    const newUser = res.user;
+    auth
+      .signInWithPopup(googleProvider)
+      .then((res) => {
+        const newUser = res.user;
 
-    const checkDomains = ["gmail.com", "yahoo.com", "outlook.com"];
-    const domain = newUser.email.substring(newUser.email.lastIndexOf("@") + 1);
-    let accountType = "";
-    if (checkDomains.includes(domain)) {
-      accountType = "limited";
-    } else {
-      accountType = "Standard";
-    }
+        const checkDomains = ["gmail.com", "yahoo.com", "outlook.com"];
+        const domain = newUser.email.substring(
+          newUser.email.lastIndexOf("@") + 1
+        );
+        let accountType = "";
+        if (checkDomains.includes(domain)) {
+          accountType = "limited";
+        } else {
+          accountType = "Standard";
+        }
 
-          firebase
+        firebase
           .firestore()
           .collection("users")
           .add({
@@ -209,15 +223,12 @@ export default function SignUpSide() {
             accountType: accountType,
           });
 
-           history.push("/dashboard");
-
-
-  }).catch((error) => {
-           alert.error(error.message);
-
-  })
+        history.push("/dashboard");
+      })
+      .catch((error) => {
+        alert.error(error.message);
+      });
   }
-
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -314,20 +325,35 @@ export default function SignUpSide() {
                   {isSubmitting ? "Signing up..." : "Sign up"}
                 </Button>
 
-<Paper elevation={0} style={{display: "flex", justifyContent: "center", marginBottom: "1em"}}>
-<Button onClick={signInWithGoogle}>
-<img className={classes.icons} src="https://img.icons8.com/fluent/100/000000/google-logo.png"/>
- </Button>
- </Paper>
+                <Paper
+                  elevation={0}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "1em",
+                  }}
+                >
+                  <Button onClick={signInWithGoogle}>
+                    <img
+                      className={classes.icons}
+                      src="https://img.icons8.com/fluent/100/000000/google-logo.png"
+                      alt="google logo"
+                    />
+                  </Button>
+                </Paper>
 
-                <Grid container>
+                <Grid container className={classes.linksWrapper}>
                   <Grid item xs>
-                    <Link to="/forget-password" variant="body2">
+                    <Link
+                      className={classes.links}
+                      to="/forget-password"
+                      variant="body2"
+                    >
                       Forgot password?
                     </Link>
                   </Grid>
                   <Grid item>
-                    <Link to="/login" variant="body2">
+                    <Link className={classes.links} to="/login" variant="body2">
                       {"Already a User? Login Here"}
                     </Link>
                   </Grid>

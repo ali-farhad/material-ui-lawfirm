@@ -22,6 +22,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 
+import { Hidden } from "@material-ui/core";
+
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Badge from "@material-ui/core/Badge";
@@ -109,10 +111,16 @@ const useStyles = makeStyles((theme) => ({
   },
   margin: {
     color: "white",
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: "auto",
+    },
   },
 
   defaults: {
-    color: "black"
+    color: "black",
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: "auto",
+    },
   },
   paperInfo: {
     padding: "3em",
@@ -137,7 +145,7 @@ export default function Dashboard(props) {
   const alert = useAlert();
   const history = useHistory();
 
-  console.log("isDark", isDark)
+  console.log("isDark", isDark);
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -167,6 +175,10 @@ export default function Dashboard(props) {
       firebase.auth().signOut();
       history.push("/login");
     }
+
+    if (code === "profile") {
+      history.push("/myprofile");
+    }
   };
 
   const handleBellClose = () => {
@@ -174,8 +186,8 @@ export default function Dashboard(props) {
   };
 
   const toggleTheme = () => {
-    changeTheme()
-  }
+    changeTheme();
+  };
 
   // const { user: loggedInUser } = useContext(UserContext);
 
@@ -218,23 +230,31 @@ export default function Dashboard(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            color="inherit"
-            variant="h6"
-            noWrap
-            style={{ flexGrow: 1 }}
-          >
-            {user ? (
-              user ? (
-                `Dashboard - welcome, ${user.displayName}!`
+
+          <Hidden xsDown>
+            <Typography
+              color="inherit"
+              variant="h6"
+              noWrap
+              style={{ flexGrow: 1 }}
+            >
+              {user ? (
+                user ? (
+                  `Dashboard - welcome, ${user.displayName}!`
+                ) : (
+                  <Skeleton />
+                )
               ) : (
                 <Skeleton />
-              )
-            ) : (
-              <Skeleton />
-            )}
-          </Typography>
-          <IconButton onClick={toggleTheme} aria-label="delete" className={isDark ? classes.margin : classes.defaults}>
+              )}
+            </Typography>
+          </Hidden>
+
+          <IconButton
+            onClick={toggleTheme}
+            aria-label="delete"
+            className={isDark ? classes.margin : classes.defaults}
+          >
             <Brightness4Icon />
           </IconButton>
 
@@ -288,8 +308,12 @@ export default function Dashboard(props) {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
+            <MenuItem onClick={() => handleClose("profile")}>
+              {" "}
+              My Profile
+            </MenuItem>
+            {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
+            <MenuItem onClick={handleClose}>Settings </MenuItem>
             <MenuItem onClick={() => handleClose("logout")}>Logout</MenuItem>
           </Menu>
         </Toolbar>
