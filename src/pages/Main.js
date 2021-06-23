@@ -32,13 +32,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Main({ user, darkState }) {
+export default function Main({ user, isDark }) {
   // let test = JSON.parse(localStorage.getItem("page"));
 
   localStorage.removeItem("page");
   localStorage.setItem("page", JSON.stringify("xyz"));
 
-  console.log("Dtate", darkState)
 
   // localStorage.setItem("page", JSON.stringify("notallowed"));
 
@@ -96,7 +95,7 @@ export default function Main({ user, darkState }) {
       {userData && userData.accountType === "limited" ? (
         <Paper
           classes={{ root: classes.paperInfo }}
-          className={!darkState ? classes.warning: null}
+          className={!isDark ? classes.warning: null}
         >
           <Typography variant="body1">
             Warning: Your account is limited due to registering with social

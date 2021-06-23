@@ -132,10 +132,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard(props) {
-  const { children, changeTheme, isDark } = props;
+  const { children, changeTheme, isDark, user } = props;
   const classes = useStyles();
   const alert = useAlert();
   const history = useHistory();
+
+  console.log("isDark", isDark)
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -175,11 +177,11 @@ export default function Dashboard(props) {
     changeTheme()
   }
 
-  const { user: loggedInUser } = useContext(UserContext);
+  // const { user: loggedInUser } = useContext(UserContext);
 
-  const { user } = useUser(loggedInUser?.uid);
+  // const { user } = useUser(loggedInUser?.uid);
 
-  console.log(user);
+  // console.log(user);
   const { firebase } = useContext(FirebaseContext);
 
   useEffect(() => {
@@ -222,9 +224,9 @@ export default function Dashboard(props) {
             noWrap
             style={{ flexGrow: 1 }}
           >
-            {loggedInUser ? (
+            {user ? (
               user ? (
-                `Dashboard - welcome, ${user.username}!`
+                `Dashboard - welcome, ${user.displayName}!`
               ) : (
                 <Skeleton />
               )
@@ -277,7 +279,7 @@ export default function Dashboard(props) {
             aria-haspopup="true"
             onClick={handleClick}
           >
-            {user && user.username.substring(0, 2).toUpperCase()}
+            {user && user.displayName.substring(0, 2).toUpperCase()}
           </Avatar>
           <Menu
             id="simple-menu"

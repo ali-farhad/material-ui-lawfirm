@@ -74,6 +74,10 @@ const useStyles = makeStyles((theme) => ({
     // backgroundColor: "#1464a3",
     color: "white",
   },
+
+  icons: {
+    maxWidth: "48px"
+  }
 }));
 
 export default function SignUpSide() {
@@ -81,7 +85,7 @@ export default function SignUpSide() {
   const alert = useAlert();
 
   const history = useHistory();
-  const { firebase } = useContext(FirebaseContext);
+  const { firebase, googleProvider} = useContext(FirebaseContext);
 
   const initialValues = {
     email: "",
@@ -172,6 +176,48 @@ export default function SignUpSide() {
       alert.error("You already have an account with us. Please Login!");
     }
   };
+
+
+  const auth = firebase.auth();
+
+  async function signInWithGoogle() {
+    auth.signInWithPopup(googleProvider).then((res) => {
+    
+    const newUser = res.user;
+
+    const checkDomains = ["gmail.com", "yahoo.com", "outlook.com"];
+    const domain = newUser.email.substring(newUser.email.lastIndexOf("@") + 1);
+    let accountType = "";
+    if (checkDomains.includes(domain)) {
+      accountType = "limited";
+    } else {
+      accountType = "Standard";
+    }
+
+          firebase
+          .firestore()
+          .collection("users")
+          .add({
+            userId: newUser.uid,
+            username: newUser.displayName.toLowerCase(),
+            // fullName,
+            emailAddress: newUser.email.toLowerCase(),
+            following: ["2"],
+            followers: [],
+            dateCreated: Date.now(),
+            firstLogin: true,
+            accountType: accountType,
+          });
+
+           history.push("/dashboard");
+
+
+  }).catch((error) => {
+           alert.error(error.message);
+
+  })
+  }
+
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -267,6 +313,13 @@ export default function SignUpSide() {
                 >
                   {isSubmitting ? "Signing up..." : "Sign up"}
                 </Button>
+
+<Paper elevation={0} style={{display: "flex", justifyContent: "center", marginBottom: "1em"}}>
+<Button onClick={signInWithGoogle}>
+<img className={classes.icons} src="https://img.icons8.com/fluent/100/000000/google-logo.png"/>
+ </Button>
+ </Paper>
+
                 <Grid container>
                   <Grid item xs>
                     <Link to="/forget-password" variant="body2">

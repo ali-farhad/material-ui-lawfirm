@@ -37,12 +37,13 @@ const EmailVerification = lazy(() => import("./pages/NotVerified"));
 
 function App() {
   const { user } = useAuthListener();
-  const [darkTheme, setDarkTheme] = useState(true);
+  const [darkTheme, setDarkTheme] = useState(false);
  
-  let isDark = true;
-  if(darkTheme === 'dark') {
+  let isDark = null;
+  if (darkTheme) {
     isDark = true;
-  } else {
+  }
+  else {
     isDark = false;
   }
   // const palletType = darkState ? "dark" : "light";
@@ -70,14 +71,14 @@ function App() {
   
 
   useEffect(() => {
-    const themeType = localStorage.getItem("dark") || "dark";
-    if (themeType != "dark") {
-      setDarkTheme(false);
+    const themeType = localStorage.getItem("light") || "light";
+    if (themeType != "light") {
+      setDarkTheme(true);
       }
   }, []);
 
   const changeTheme = () => {
-    localStorage.setItem("dark", darkTheme ? "light" : "dark");
+    localStorage.setItem("light", darkTheme ? "light" : "dark");
     setDarkTheme(!darkTheme);
   };
   

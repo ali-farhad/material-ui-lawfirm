@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 
 import FirebaseContext from "./context/firebase";
-import { firebase, FieldValue } from "./libs/firebase";
+import { firebase, FieldValue, googleProvider } from "./libs/firebase";
 
 //imports for notification
 import { positions, Provider } from "react-alert";
@@ -19,7 +19,7 @@ const options = {
 };
 
 ReactDOM.render(
-  <FirebaseContext.Provider value={{ firebase, FieldValue }}>
+  <FirebaseContext.Provider value={{ firebase, FieldValue, googleProvider }}>
     <Provider template={AlertTemplate} {...options}>
       <App />
     </Provider>

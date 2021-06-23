@@ -15,4 +15,16 @@ const config = {
 const firebase = Firebase.initializeApp(config);
 const { FieldValue } = Firebase.firestore;
 
-export { firebase, FieldValue };
+const auth = Firebase.auth();
+const googleProvider =  new Firebase.auth.GoogleAuthProvider()
+// const signInWithGoogle = () => {
+//   auth.signInWithPopup(googleProvider).then((res) => {
+//     console.log(res.user)
+//   }).catch((error) => {
+//     console.log(error.message)
+//   })
+// }
+
+
+
+export { firebase, FieldValue, googleProvider };
