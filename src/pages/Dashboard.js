@@ -335,7 +335,7 @@ export default function Dashboard(props) {
                 component={Link}
                 to="/dashboard"
                 disableRipple
-                className={!isDark && classes.imageContainer}
+                className={!isDark ? classes.imageContainer : "null"}
               >
                 <img
                   style={{

@@ -88,6 +88,9 @@ const useStyles = makeStyles((theme) => ({
     },
     margin: "1rem 0",
   },
+  bgWhite: {
+    backgroundColor: `white`,
+  },
 }));
 
 const validationSchema = yup.object({
@@ -157,8 +160,8 @@ export default function ForgetPassword({ isDark }) {
               padding: ".5rem",
               margin: "1rem",
               width: "12rem",
-              backgroundColor: `{${!isDark} && white}`,
             }}
+            className={!isDark ? classes.bgWhite : "null"}
           />
         </Hidden>
       </Grid>

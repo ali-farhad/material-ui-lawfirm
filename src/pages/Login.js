@@ -106,6 +106,10 @@ export default function SignInSide({ isDark }) {
         flexDirection: "column",
       },
     },
+
+    bgWhite: {
+      backgroundColor: `white`,
+    },
   }));
 
   const classes = useStyles();
@@ -216,8 +220,8 @@ export default function SignInSide({ isDark }) {
               padding: ".5rem",
               margin: "1rem",
               width: "12rem",
-              backgroundColor: `{${!isDark} && white}`,
             }}
+            className={!isDark ? classes.bgWhite : "null"}
           />
         </Hidden>
       </Grid>
