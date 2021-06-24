@@ -63,7 +63,7 @@ export default function Main({ user, isDark }) {
   useEffect(() => {
     const getUser = async () => {
       const result = await getUserByUserId(user.uid);
-      console.log("T", result[0]);
+      // console.log("T", result[0]);
       setUserData(result[0]);
     };
 

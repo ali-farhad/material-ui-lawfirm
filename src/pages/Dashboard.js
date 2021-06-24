@@ -145,7 +145,7 @@ export default function Dashboard(props) {
   const alert = useAlert();
   const history = useHistory();
 
-  console.log("isDark", isDark);
+  // console.log("isDark", isDark);
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);

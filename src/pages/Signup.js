@@ -191,7 +191,9 @@ export default function SignUpSide({ isDark }) {
 
   const auth = firebase.auth();
 
+  const [isload, setIsload] = useState("");
   async function signInWithGoogle() {
+    setIsload(true);
     auth
       .signInWithPopup(googleProvider)
       .then((res) => {
@@ -206,7 +208,7 @@ export default function SignUpSide({ isDark }) {
           accountType = "limited";
         } else {
           accountType = "Standard";
-        }
+        };
 
         firebase
           .firestore()
@@ -223,11 +225,18 @@ export default function SignUpSide({ isDark }) {
             accountType: accountType,
           });
 
-        history.push("/dashboard");
+          setIsload(false);
+
+          if(!isload) {
+            history.push("/dashboard");
+
+          }
+        
       })
       .catch((error) => {
         alert.error(error.message);
       });
+
   }
 
   return (
