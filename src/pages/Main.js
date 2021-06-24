@@ -79,7 +79,7 @@ export default function Main({ user, isDark }) {
     const stripe = await stripePromise;
 
     const response = await fetch(
-      "https://k80qj.sse.codesandbox.io/create-checkout-session?name=Dextera%20Standard%20Membership&price=500",
+      "https://frozen-badlands-01381.herokuapp.com/create-checkout-session?name=Dextera%20Standard%20Membership&price=500",
       {
         method: "POST",
       }
