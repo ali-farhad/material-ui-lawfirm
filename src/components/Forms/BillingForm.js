@@ -41,13 +41,13 @@ export default function BillingForm(props) {
           {/* bankAcc: "", routingNum: "", creditCardNum: "", securityCode:
                 "", expiry: "", bAddress: "", bSuit: "", bCountry: "", bCity:
                 "", bState: "", bZip: "", */}
-          <Grid item xs={12} style={{ padding: "1em 2em" }}>
+          {/* <Grid item xs={12} style={{ padding: "1em 2em" }}>
             <InputField name={bankAcNum.name} label={bankAcNum.label} />
           </Grid>
 
           <Grid item xs={12} style={{ padding: "1em 2em" }}>
             <InputField name={routingNum.name} label={routingNum.label} />
-          </Grid>
+          </Grid> */}
 
           {/* <Grid container spacing={2} style={{ padding: "1em 2em" }}>
             <Grid item xs={12} md={4}>

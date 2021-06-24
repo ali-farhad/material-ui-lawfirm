@@ -92,7 +92,11 @@ function App() {
               <Route path="/signup">
                 <SignUp isDark={isDark} />
               </Route>
-              <Route path="/forget-password" component={ForgetPassword} />
+
+              <Route path="/forget-password">
+                <ForgetPassword isDark={isDark} />
+              </Route>
+
               <Route path="/email-verification" component={EmailVerification} />
 
               {/* <Route path="/dashboard">

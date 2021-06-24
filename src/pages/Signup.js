@@ -18,7 +18,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import signUpImg from "../assets/login.png";
 import signUpImgLight from "../assets/login_light.png";
+
 import logo from "../assets/logo.png";
+import logoDark from "../assets/logo_dark.png";
 
 import { FormHelperText, Hidden } from "@material-ui/core";
 
@@ -114,7 +116,7 @@ export default function SignUpSide({ isDark }) {
       .required("Email is required"),
     password: yup
       .string("Enter your password")
-      .min(6, "Password should be of minimum 6 characters length")
+      .min(8, "Password should be of minimum 8 characters length")
       .required("Password is required"),
 
     acceptTerms: yup.bool().oneOf([true], "Please accept Terms & Conditions"),
@@ -208,7 +210,7 @@ export default function SignUpSide({ isDark }) {
           accountType = "limited";
         } else {
           accountType = "Standard";
-        };
+        }
 
         firebase
           .firestore()
@@ -225,18 +227,15 @@ export default function SignUpSide({ isDark }) {
             accountType: accountType,
           });
 
-          setIsload(false);
+        setIsload(false);
 
-          if(!isload) {
-            history.push("/dashboard");
-
-          }
-        
+        if (!isload) {
+          history.push("/dashboard");
+        }
       })
       .catch((error) => {
         alert.error(error.message);
       });
-
   }
 
   return (
@@ -251,13 +250,13 @@ export default function SignUpSide({ isDark }) {
             Dexter
           </Typography> */}
           <img
-            src={logo}
+            src={isDark ? logoDark : logo}
             alt=""
             style={{
               padding: ".5rem",
               margin: "1rem",
               width: "12rem",
-              backgroundColor: "white",
+              backgroundColor: `{${!isDark} && white}`,
             }}
           />
         </Hidden>

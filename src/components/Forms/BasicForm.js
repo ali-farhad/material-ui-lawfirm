@@ -2,13 +2,21 @@ import React from "react";
 import InputField from "../FormFields/InputField";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { Grid } from "@material-ui/core";
 
+import Switch from "@material-ui/core/Switch";
+import { useN01SwitchStyles } from "@mui-treasury/styles/switch/n01";
+
 const useStyles = makeStyles((theme) => ({}));
 
 export default function BasicForm(props) {
+  const [toggled, setToggled] = React.useState(false);
+
+  const switchStyles = useN01SwitchStyles();
+
   const classes = useStyles();
   // const theme = useTheme();
 
@@ -27,6 +35,10 @@ export default function BasicForm(props) {
     },
   } = props;
 
+  function handleToggle(e) {
+    setToggled(e.target.checked);
+  }
+
   return (
     <div
       className={classes.form}
@@ -35,7 +47,7 @@ export default function BasicForm(props) {
       <Paper>
         <Grid container spacing={2}>
           <Grid item xs={12} style={{ padding: "1em 2em" }}>
-            <Typography variant="h6">Enter Your Basic Details</Typography>
+            <Typography variant="h6">Enter your contact information</Typography>
           </Grid>
           <Grid container spacing={2} style={{ padding: "1em 2em" }}>
             <Grid item xs={12} md={4}>
@@ -54,12 +66,34 @@ export default function BasicForm(props) {
           </Grid>
 
           <Grid container spacing={2} style={{ padding: "1em 2em" }}>
-            <Grid item xs={12} md={6}>
-              <InputField name={ph_number.name} label={ph_number.label} />
+            <Grid item xs={12} md={2}>
+              <Switch
+                classes={switchStyles}
+                checked={toggled}
+                // onChange={(e) => setToggled(e.target.checked)}
+                onChange={(e) => handleToggle(e)}
+              />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <InputField name={mob_number.name} label={mob_number.label} />
-            </Grid>
+
+            {toggled && (
+              <Grid item xs={12} md={10}>
+                <InputField
+                  disabled={!toggled}
+                  name={ph_number.name}
+                  label={ph_number.label}
+                />
+              </Grid>
+            )}
+
+            {!toggled && (
+              <Grid item xs={12} md={10}>
+                <InputField
+                  disabled={toggled}
+                  name={mob_number.name}
+                  label={mob_number.label}
+                />
+              </Grid>
+            )}
           </Grid>
 
           <Grid item xs={12} style={{ padding: "1em 2em" }}>

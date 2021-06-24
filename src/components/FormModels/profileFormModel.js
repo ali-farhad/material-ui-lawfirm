@@ -72,7 +72,7 @@ export default {
     },
     cEmail: {
       name: "cEmail",
-      label: "Company Email*",
+      label: "Company Email",
       requiredErrorMsg: "This field is required",
     },
     cPhNumber: {
@@ -83,7 +83,7 @@ export default {
     },
     cCountry: {
       name: "cCountry",
-      label: "Company Country*",
+      label: "Company Country",
       requiredErrorMsg: "This field is required",
     },
     cCity: {
@@ -109,24 +109,24 @@ export default {
     },
     cSuit: {
       name: "cSuit",
-      label: "Company Suit*",
+      label: "Company Suit",
       requiredErrorMsg: "This field is required",
     },
     cNumOfAttornies: {
       name: "cNumOfAttornies",
-      label: "Number of Attornies*",
+      label: "Number of Attornies",
       requiredErrorMsg: "This field is required",
       typeErrorMsg: "Enter a  valid Number",
     },
     cNumOfEmp: {
       name: "cNumofEmp",
-      label: "Number of Employees*",
+      label: "Number of Employees",
       requiredErrorMsg: "This field is required",
       typeErrorMsg: "Enter a  valid Number",
     },
     cNumOfOffices: {
       name: "cNumOfOffices",
-      label: "Number of Offices*",
+      label: "Number of Offices",
       requiredErrorMsg: "This field is required",
       typeErrorMsg: "Enter a  valid Number",
     },

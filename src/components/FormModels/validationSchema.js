@@ -45,57 +45,76 @@ const {
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
-  Yup.object().shape({
-    [firstName.name]: Yup.string()
-      .required(`${firstName.requiredErrorMsg}`)
-      .matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field "),
-    [middleName.name]: Yup.string().matches(
-      /^[aA-zZ\s]+$/,
-      "Only alphabets are allowed for this field "
-    ),
+  Yup.object().shape(
+    {
+      [firstName.name]: Yup.string()
+        .required(`${firstName.requiredErrorMsg}`)
+        .matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field "),
+      [middleName.name]: Yup.string().matches(
+        /^[aA-zZ\s]+$/,
+        "Only alphabets are allowed for this field "
+      ),
 
-    [lastName.name]: Yup.string()
-      .required(`${lastName.requiredErrorMsg}`)
-      .typeError(`${lastName.typeErrorMsg}`)
-      .matches(/^[aA-zZ\s]+$/, "Only alphabets are allowed for this field "),
-    [username.name]: Yup.string().required(`${username.requiredErrorMsg}`),
-    [ph_number.name]: Yup.number()
-      .required(`${ph_number.requiredErrorMsg}`)
-      .typeError(`${ph_number.typeErrorMsg}`),
-    [mob_number.name]: Yup.number()
-      .required(`${mob_number.requiredErrorMsg}`)
-      .typeError(`${mob_number.typeErrorMsg}`),
-    [web_url.name]: Yup.string(`${web_url.validUrlMsg}`),
-    [linkadin_url.name]: Yup.string(`${linkadin_url.validUrlMsg}`),
-    [fb_url.name]: Yup.string(`${fb_url.validUrlMsg}`),
-    [twitter_url.name]: Yup.string(`${twitter_url.validUrlMsg}`),
-  }),
+      [lastName.name]: Yup.string()
+        .required(`${lastName.requiredErrorMsg}`)
+        .typeError(`${lastName.typeErrorMsg}`)
+        .matches(/^[aA-zZ\s]+$/, "Only Letters are allowed for this field "),
+      [username.name]: Yup.string().required(`${username.requiredErrorMsg}`),
+
+      // [ph_number.name]: Yup.number()
+      //   .required(`${ph_number.requiredErrorMsg}`)
+      //   .typeError(`${ph_number.typeErrorMsg}`),
+
+      // [mob_number.name]: Yup.number()
+      //   .required(`${mob_number.requiredErrorMsg}`)
+      //   .typeError(`${mob_number.typeErrorMsg}`),
+
+      [ph_number.name]: Yup.string()
+        .ensure()
+        .when(`${[mob_number.name]}`, {
+          is: "",
+          then: Yup.string()
+            .required(`${ph_number.requiredErrorMsg}`)
+            .typeError(`${ph_number.typeErrorMsg}`),
+        }),
+      [mob_number.name]: Yup.string()
+        .ensure()
+        .when(`${[ph_number.name]}`, {
+          is: "",
+          then: Yup.string()
+            .required(`${mob_number.requiredErrorMsg}`)
+            .typeError(`${mob_number.typeErrorMsg}`),
+        }),
+      [web_url.name]: Yup.string(`${web_url.validUrlMsg}`),
+      [linkadin_url.name]: Yup.string(`${linkadin_url.validUrlMsg}`),
+      [fb_url.name]: Yup.string(`${fb_url.validUrlMsg}`),
+      [twitter_url.name]: Yup.string(`${twitter_url.validUrlMsg}`),
+    },
+    [["ph_number", "mob_number"]]
+  ),
   // Company Form
   Yup.object().shape({
     [cName.name]: Yup.string().required(`${cName.requiredErrorMsg}`),
-    [cEmail.name]: Yup.string()
-      .email("Enter a valid Email Address")
-      .required(`${cEmail.requiredErrorMsg}`),
+    [cEmail.name]: Yup.string().email("Enter a valid Email Address"),
+    // .required(`${cEmail.requiredErrorMsg}`),
     [cPhNumber.name]: Yup.number()
       .required(`${cPhNumber.requiredErrorMsg}`)
       .typeError(`${cPhNumber.typeErrorMsg}`),
-    [cCountry.name]: Yup.string().required(`${cCountry.requiredErrorMsg}`),
+    [cCountry.name]: Yup.string(),
     [cCity.name]: Yup.string().required(`${cCity.requiredErrorMsg}`),
     [cState.name]: Yup.string().required(`${cState.requiredErrorMsg}`),
     [cZip.name]: Yup.number()
       .required(`${cZip.requiredErrorMsg}`)
       .typeError(`${cZip.typeErrorMsg}`),
     [cAddress.name]: Yup.string().required(`${cAddress.requiredErrorMsg}`),
-    [cSuit.name]: Yup.string().required(`${cSuit.requiredErrorMsg}`),
-    [cNumOfAttornies.name]: Yup.number()
-      .required(`${cNumOfAttornies.requiredErrorMsg}`)
-      .typeError(`${cNumOfAttornies.typeErrorMsg}`),
-    [cNumOfEmp.name]: Yup.number()
-      .required(`${cNumOfEmp.requiredErrorMsg}`)
-      .typeError(`${cNumOfEmp.typeErrorMsg}`),
-    [cNumOfOffices.name]: Yup.number()
-      .required(`${cNumOfOffices.requiredErrorMsg}`)
-      .typeError(`${cNumOfOffices.typeErrorMsg}`),
+    [cSuit.name]: Yup.string(),
+    [cNumOfAttornies.name]: Yup.number().typeError(
+      `${cNumOfAttornies.typeErrorMsg}`
+    ),
+    [cNumOfEmp.name]: Yup.number().typeError(`${cNumOfEmp.typeErrorMsg}`),
+    [cNumOfOffices.name]: Yup.number().typeError(
+      `${cNumOfOffices.typeErrorMsg}`
+    ),
   }),
 
   //Billing Form

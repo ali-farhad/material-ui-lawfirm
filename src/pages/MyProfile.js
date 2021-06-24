@@ -56,7 +56,7 @@ import formInitialValues from "../components/FormModels/formInitialValues";
 import useFormValues from "../components/FormModels/useFormValues";
 // import { current } from "immer";
 
-const steps = ["Basic Details", "Company Details", "Billing Information"];
+const steps = ["Contact Details", "Company Details", "Billing Details"];
 const { formField } = profileFormModel;
 
 function _renderStepContent(step) {

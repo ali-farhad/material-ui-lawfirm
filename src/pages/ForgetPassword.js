@@ -17,8 +17,10 @@ import { Hidden } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import singupImg from "../assets/signup.png";
 import logo from "../assets/logo.png";
+import logoDark from "../assets/logo_dark.png";
+
+import singupImg from "../assets/signup.png";
 
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -95,7 +97,7 @@ const validationSchema = yup.object({
     .required("Email is required"),
 });
 
-export default function ForgetPassword() {
+export default function ForgetPassword({ isDark }) {
   const classes = useStyles();
   const history = useHistory();
   const alert = useAlert();
@@ -149,13 +151,13 @@ export default function ForgetPassword() {
           </Typography> */}
 
           <img
-            src={logo}
+            src={isDark ? logoDark : logo}
             alt=""
             style={{
               padding: ".5rem",
               margin: "1rem",
               width: "12rem",
-              backgroundColor: "white",
+              backgroundColor: `{${!isDark} && white}`,
             }}
           />
         </Hidden>

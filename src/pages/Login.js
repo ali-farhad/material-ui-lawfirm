@@ -18,6 +18,7 @@ import { Hidden } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import logo from "../assets/logo.png";
+import logoDark from "../assets/logo_dark.png";
 
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -209,13 +210,13 @@ export default function SignInSide({ isDark }) {
           </Typography> */}
 
           <img
-            src={logo}
+            src={isDark ? logoDark : logo}
             alt=""
             style={{
               padding: ".5rem",
               margin: "1rem",
               width: "12rem",
-              backgroundColor: "white",
+              backgroundColor: `{${!isDark} && white}`,
             }}
           />
         </Hidden>

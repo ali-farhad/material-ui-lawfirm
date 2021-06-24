@@ -29,6 +29,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Badge from "@material-ui/core/Badge";
 
 import logo from "../assets/logo.png";
+import logoDark from "../assets/logo_dark.png";
 
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -334,15 +335,15 @@ export default function Dashboard(props) {
                 component={Link}
                 to="/dashboard"
                 disableRipple
-                className={classes.imageContainer}
+                className={!isDark && classes.imageContainer}
               >
                 <img
                   style={{
-                    width: "125px",
-                    marginLeft: "1em",
+                    width: "141px",
+                    // marginLeft: "1em",
                     display: "block",
                   }}
-                  src={logo}
+                  src={isDark ? logoDark : logo}
                   alt=""
                 />
               </Button>
