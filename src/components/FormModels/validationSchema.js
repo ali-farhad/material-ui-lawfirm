@@ -31,9 +31,9 @@ const {
     //Billing Form
     bankAcNum,
     routingNum,
-    // cCardNum,
-    // cSecCode,
-    // expMonthYear,
+    cCardNum,
+    cSecCode,
+    expMonthYear,
     bCountry,
     bCity,
     bState,
@@ -69,28 +69,27 @@ export default [
       //   .required(`${mob_number.requiredErrorMsg}`)
       //   .typeError(`${mob_number.typeErrorMsg}`),
 
-      [ph_number.name]: Yup.string()
-        .ensure()
-        .when(`${[mob_number.name]}`, {
-          is: "",
-          then: Yup.string()
-            .required(`${ph_number.requiredErrorMsg}`)
-            .typeError(`${ph_number.typeErrorMsg}`),
-        }),
-      [mob_number.name]: Yup.string()
-        .ensure()
-        .when(`${[ph_number.name]}`, {
-          is: "",
-          then: Yup.string()
-            .required(`${mob_number.requiredErrorMsg}`)
-            .typeError(`${mob_number.typeErrorMsg}`),
-        }),
+      // [ph_number.name]: Yup.string()
+      //   .ensure()
+      //   .when(`${[mob_number.name]}`, {
+      //     is: "",
+      //     then: Yup.string()
+      //       .required(`${ph_number.requiredErrorMsg}`)
+      //       .typeError(`${ph_number.typeErrorMsg}`),
+      //   }),
+      // [mob_number.name]: Yup.string()
+      //   .ensure()
+      //   .when(`${[ph_number.name]}`, {
+      //     is: "",
+      //     then: Yup.string()
+      //       .required(`${mob_number.requiredErrorMsg}`)
+      //       .typeError(`${mob_number.typeErrorMsg}`),
+      //   }),
       [web_url.name]: Yup.string(`${web_url.validUrlMsg}`),
       [linkadin_url.name]: Yup.string(`${linkadin_url.validUrlMsg}`),
       [fb_url.name]: Yup.string(`${fb_url.validUrlMsg}`),
       [twitter_url.name]: Yup.string(`${twitter_url.validUrlMsg}`),
-    },
-    [["ph_number", "mob_number"]]
+    }
   ),
   // Company Form
   Yup.object().shape({
@@ -119,13 +118,13 @@ export default [
 
   //Billing Form
   Yup.object().shape({
-    [bankAcNum.name]: Yup.number()
-      .required(`${bankAcNum.requiredErrorMsg}`)
-      .typeError(`${bankAcNum.typeErrorMsg}`),
+    // [bankAcNum.name]: Yup.number()
+    //   .required(`${bankAcNum.requiredErrorMsg}`)
+    //   .typeError(`${bankAcNum.typeErrorMsg}`),
 
-    [routingNum.name]: Yup.number()
-      .required(`${routingNum.requiredErrorMsg}`)
-      .typeError(`${routingNum.typeErrorMsg}`),
+    // [routingNum.name]: Yup.number()
+    //   .required(`${routingNum.requiredErrorMsg}`)
+    //   .typeError(`${routingNum.typeErrorMsg}`),
 
     // [cCardNum.name]: Yup.number()
     //   .required(`${cCardNum.requiredErrorMsg}`)

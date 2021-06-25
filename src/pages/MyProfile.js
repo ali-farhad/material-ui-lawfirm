@@ -145,6 +145,7 @@ export default function MyProfile({ user }) {
     checkedB: true,
   });
 
+
   const handleSwitchChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
@@ -153,10 +154,10 @@ export default function MyProfile({ user }) {
   const currentValidationSchema = validationSchema[activeStep];
   const isLastStep = activeStep === steps.length - 1;
 
+
   async function _submitForm(values, actions) {
     actions.setSubmitting(false);
 
-    // console.log(values);
 
     try {
       firebase
@@ -167,38 +168,44 @@ export default function MyProfile({ user }) {
           userId: user.uid,
           ...values,
         });
-    } catch (error) {
-      console.log("crate error", error.message);
-    }
-
-    try {
-      // let query = firebase
-      //   .firestore()
-      //   .collection("profiles")
-      //   .where("userId", "==", user.uid);
-      // query.get().then(function (querySnapshot) {
-      //   querySnapshot.forEach(function (doc) {
-      //     doc.ref.delete();
-      //   });
-      // });
-
-      // firebase
-      //   .firestore()
-      //   .collection("profiles")
-      //   .add({
-      //     userId: user.uid,
-      //     ...values,
-      //   });
 
       history.push("/dashboard");
       alert.success("Profile updated successfully!");
     } catch (error) {
-      console.log(error);
-      alert.error(error.message);
+      console.log("crate error", error.message);
+       alert.error(error.message);
     }
+
+    // try {
+    //   // let query = firebase
+    //   //   .firestore()
+    //   //   .collection("profiles")
+    //   //   .where("userId", "==", user.uid);
+    //   // query.get().then(function (querySnapshot) {
+    //   //   querySnapshot.forEach(function (doc) {
+    //   //     doc.ref.delete();
+    //   //   });
+    //   // });
+
+    //   // firebase
+    //   //   .firestore()
+    //   //   .collection("profiles")
+    //   //   .add({
+    //   //     userId: user.uid,
+    //   //     ...values,
+    //   //   });
+
+    //   history.push("/dashboard");
+    //   alert.success("Profile updated successfully!");
+    // } catch (error) {
+    //   console.log(error);
+    //   alert.error(error.message);
+    // }
 
     // console.log(values);
   }
+
+  
 
   function _handleSubmit(values, actions) {
     if (isLastStep) {
@@ -272,7 +279,7 @@ export default function MyProfile({ user }) {
                       )}
                       <div>
                         <Button
-                          disabled={isSubmitting}
+                          // disabled={isSubmitting}
                           type="submit"
                           variant="contained"
                           color="primary"
