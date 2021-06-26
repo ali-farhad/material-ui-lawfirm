@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useContext, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, Redirect  } from "react-router-dom";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -54,7 +54,8 @@ const validationSchema = yup.object({
     .required("Password is required"),
 });
 
-export default function SignInSide({ isDark }) {
+export default function SignInSide({ isDark, user }) {
+
   const [bgImg, setBgImg] = useState("");
 
   const useStyles = makeStyles((theme) => ({
@@ -116,7 +117,8 @@ export default function SignInSide({ isDark }) {
   const history = useHistory();
   const alert = useAlert();
 
-  const { firebase, googleProvider } = useContext(FirebaseContext);
+   const { firebase, googleProvider } = useContext(FirebaseContext);
+
 
   const formik = useFormik({
     initialValues: {
@@ -150,6 +152,8 @@ export default function SignInSide({ isDark }) {
     },
   });
 
+
+
   useEffect(() => {
     document.title = "Login - Dextra";
 
@@ -158,6 +162,8 @@ export default function SignInSide({ isDark }) {
     } else {
       setBgImg(signUpImgLight);
     }
+
+
   }, [isDark]);
 
   const auth = firebase.auth();
@@ -200,6 +206,18 @@ export default function SignInSide({ isDark }) {
         alert.error(error.message);
       });
   }
+
+    if(user) {
+      return (
+            <Redirect
+              to={{
+                pathname: "/dashboard",
+                // state: { from: location },
+              }}
+            />
+          );
+  }
+
 
   return (
     <Grid container component="main" className={classes.root}>

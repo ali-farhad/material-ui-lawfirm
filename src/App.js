@@ -87,7 +87,7 @@ function App() {
           <Suspense fallback={<ReactLoader />}>
             <Switch>
               <Route path="/login">
-                <Login isDark={isDark} />
+                <Login user={user} isDark={isDark} />
               </Route>
               <Route path="/signup">
                 <SignUp isDark={isDark} />
