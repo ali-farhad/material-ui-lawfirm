@@ -43,7 +43,9 @@ const {
   },
 } = profileFormModel;
 
-const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+const phoneRegExp =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+const zipRegExp = /^\d{5}(-\d{4})?(?!-)$/;
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -71,33 +73,27 @@ export default [
       //   .required(`${mob_number.requiredErrorMsg}`)
       //   .typeError(`${mob_number.typeErrorMsg}`),
 
-
-
       [ph_number.name]: Yup.string()
         .ensure()
         .when(`${[mob_number.name]}`, {
           is: "",
-          then: Yup.string()
-            .required(`${ph_number.requiredErrorMsg}`)
-            .matches(phoneRegExp, 'Phone number is not valid')
+          then: Yup.string().required(`${ph_number.requiredErrorMsg}`),
+          // .matches(phoneRegExp, "Phone number is not valid"),
         }),
-
 
       [mob_number.name]: Yup.string()
         .ensure()
         .when(`${[ph_number.name]}`, {
           is: "",
-          then: Yup.string()
-            .required(`${mob_number.requiredErrorMsg}`)
-            .matches(phoneRegExp, 'Mobile number is not valid')
+          then: Yup.string().required(`${mob_number.requiredErrorMsg}`),
+          // .matches(phoneRegExp, "Mobile number is not valid"),
         }),
       [web_url.name]: Yup.string(`${web_url.validUrlMsg}`),
       [linkadin_url.name]: Yup.string(`${linkadin_url.validUrlMsg}`),
       [fb_url.name]: Yup.string(`${fb_url.validUrlMsg}`),
       [twitter_url.name]: Yup.string(`${twitter_url.validUrlMsg}`),
-    },[
-      ['mob_number', 'ph_number']
-    ]
+    },
+    [["mob_number", "ph_number"]]
   ),
   // Company Form
   Yup.object().shape({
@@ -110,9 +106,9 @@ export default [
     [cCountry.name]: Yup.string(),
     [cCity.name]: Yup.string().required(`${cCity.requiredErrorMsg}`),
     [cState.name]: Yup.string().required(`${cState.requiredErrorMsg}`),
-    [cZip.name]: Yup.number()
+    [cZip.name]: Yup.string()
       .required(`${cZip.requiredErrorMsg}`)
-      .typeError(`${cZip.typeErrorMsg}`),
+      .matches(zipRegExp, "Zip Number is not valid"),
     [cAddress.name]: Yup.string().required(`${cAddress.requiredErrorMsg}`),
     [cSuit.name]: Yup.string(),
     [cNumOfAttornies.name]: Yup.number().typeError(
@@ -199,7 +195,7 @@ export default [
     [bCity.name]: Yup.string(),
     [bState.name]: Yup.string(),
 
-    [bZip.name]: Yup.number().typeError(`${bZip.typeErrorMsg}`),
+    [bZip.name]: Yup.string().matches(zipRegExp, "Zip Number is not valid"),
 
     [bAddress.name]: Yup.string(),
     [bSuit.name]: Yup.string(),

@@ -1,6 +1,12 @@
 import React from "react";
 import InputField from "../FormFields/InputField";
 
+import MaskedInput from "react-text-mask";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import Paper from "@material-ui/core/Paper";
@@ -8,7 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import { Grid } from "@material-ui/core";
 
 import Switch from "@material-ui/core/Switch";
-import { useN01SwitchStyles } from "@mui-treasury/styles/switch/n01";
+import { useN01SwitchStyles } from "./styles/n01";
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -38,6 +44,49 @@ export default function BasicForm(props) {
   function handleToggle(e) {
     setToggled(e.target.checked);
   }
+
+  const [values, setValues] = React.useState({
+    textmask: "(1  )    -    ",
+    numberformat: "1",
+  });
+
+  function TextMaskCustom(props) {
+    const { inputRef, ...other } = props;
+
+    return (
+      <MaskedInput
+        {...other}
+        ref={(ref) => {
+          inputRef(ref ? ref.inputElement : null);
+        }}
+        mask={[
+          "(",
+          /[1-9]/,
+          /\d/,
+          /\d/,
+          ")",
+          " ",
+          /\d/,
+          /\d/,
+          /\d/,
+          "-",
+          /\d/,
+          /\d/,
+          /\d/,
+          /\d/,
+        ]}
+        placeholderChar={"\u2000"}
+        showMask
+      />
+    );
+  }
+
+  const handleChange = (event) => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   return (
     <div
@@ -77,20 +126,59 @@ export default function BasicForm(props) {
 
             {toggled && (
               <Grid item xs={12} md={10}>
+                {/* <InputField
+                  disabled={!toggled}
+                  name={ph_number.name}
+                  label={ph_number.label}
+                /> */}
+
+                {/* <TextField
+                  // disabled={!toggled}
+                  label={ph_number.label}
+                  // value={values.numberformat}
+                  variant="outlined"
+                  // onBlur={handleChange}
+                  name={ph_number.name}
+                 id="formatted-numberformat-input
+                  InputProps={{
+                    inputComponent: TextMaskCustom,
+                  }}
+                /> */}
+
                 <InputField
                   disabled={!toggled}
                   name={ph_number.name}
                   label={ph_number.label}
+                  autoComplete="off"
+                  InputProps={{
+                    inputComponent: TextMaskCustom,
+                  }}
                 />
               </Grid>
             )}
 
             {!toggled && (
               <Grid item xs={12} md={10}>
+                {/* <TextField
+                  // disabled={toggled}
+                  label={mob_number.label}
+                  // value={values.numberformat}
+                  variant="outlined"
+                  // onBlur={handleChange}
+                  name={mob_number.name}
+                  id="formatted-numberformat-input"
+                  InputProps={{
+                    inputComponent: TextMaskCustom,
+                  }} */}
                 <InputField
                   disabled={toggled}
                   name={mob_number.name}
                   label={mob_number.label}
+                  // onChange={handleChange}
+                  // onBlur={handleChange}
+                  InputProps={{
+                    inputComponent: TextMaskCustom,
+                  }}
                 />
               </Grid>
             )}

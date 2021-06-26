@@ -54,6 +54,7 @@ import validationSchema from "../components/FormModels/validationSchema";
 import profileFormModel from "../components/FormModels/profileFormModel";
 import formInitialValues from "../components/FormModels/formInitialValues";
 import useFormValues from "../components/FormModels/useFormValues";
+import { CodeSharp } from "@material-ui/icons";
 // import { current } from "immer";
 
 const steps = ["Contact Details", "Company Details", "Billing Details"];
@@ -145,7 +146,6 @@ export default function MyProfile({ user }) {
     checkedB: true,
   });
 
-
   const handleSwitchChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
@@ -154,10 +154,10 @@ export default function MyProfile({ user }) {
   const currentValidationSchema = validationSchema[activeStep];
   const isLastStep = activeStep === steps.length - 1;
 
-
   async function _submitForm(values, actions) {
     actions.setSubmitting(false);
 
+    // console.log(values);
 
     try {
       firebase
@@ -173,7 +173,7 @@ export default function MyProfile({ user }) {
       alert.success("Profile updated successfully!");
     } catch (error) {
       console.log("crate error", error.message);
-       alert.error(error.message);
+      alert.error(error.message);
     }
 
     // try {
@@ -204,8 +204,6 @@ export default function MyProfile({ user }) {
 
     // console.log(values);
   }
-
-  
 
   function _handleSubmit(values, actions) {
     if (isLastStep) {

@@ -90,7 +90,7 @@ function App() {
                 <Login user={user} isDark={isDark} />
               </Route>
               <Route path="/signup">
-                <SignUp isDark={isDark} />
+                <SignUp user={user} isDark={isDark} />
               </Route>
 
               <Route path="/forget-password">

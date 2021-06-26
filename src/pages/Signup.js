@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useContext, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, Redirect } from "react-router-dom";
 import FirebaseContext from "../context/firebase";
 
 import Avatar from "@material-ui/core/Avatar";
@@ -43,7 +43,7 @@ function Copyright() {
   );
 }
 
-export default function SignUpSide({ isDark }) {
+export default function SignUpSide({ isDark, user }) {
   const [bgImg, setBgImg] = useState("");
 
   const useStyles = makeStyles((theme) => ({
@@ -239,6 +239,17 @@ export default function SignUpSide({ isDark }) {
       .catch((error) => {
         alert.error(error.message);
       });
+  }
+
+  if (user) {
+    return (
+      <Redirect
+        to={{
+          pathname: "/dashboard",
+          // state: { from: location },
+        }}
+      />
+    );
   }
 
   return (
