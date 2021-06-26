@@ -8,7 +8,7 @@ import { deepOrange } from "@material-ui/core/colors";
 import { getUserByUserId } from "../services/firebase";
 
 import { useAlert } from "react-alert";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 import useUser from "../hooks/use-user";
 import { firebase, FieldValue } from "../libs/firebase";
@@ -46,8 +46,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Notverified() {
+export default function Notverified({ user }) {
   const classes = useStyles();
+
+  if (user.emailVerified) {
+    return (
+      <Redirect
+        to={{
+          pathname: "/dashboard",
+          // state: { from: location },
+        }}
+      />
+    );
+  }
 
   return (
     <div className={classes.drawerHeader}>

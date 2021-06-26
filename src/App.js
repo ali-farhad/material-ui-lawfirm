@@ -97,7 +97,9 @@ function App() {
                 <ForgetPassword isDark={isDark} />
               </Route>
 
-              <Route path="/email-verification" component={EmailVerification} />
+              <Route path="/email-verification">
+                <EmailVerification user={user} isDark={isDark} />
+              </Route>
 
               {/* <Route path="/dashboard">
                 <Dashboard user={user}>

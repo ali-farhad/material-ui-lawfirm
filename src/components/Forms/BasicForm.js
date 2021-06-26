@@ -126,39 +126,45 @@ export default function BasicForm(props) {
 
             {toggled && (
               <Grid item xs={12} md={10}>
-                {/* <InputField
-                  disabled={!toggled}
-                  name={ph_number.name}
-                  label={ph_number.label}
-                /> */}
-
-                {/* <TextField
-                  // disabled={!toggled}
-                  label={ph_number.label}
-                  // value={values.numberformat}
-                  variant="outlined"
-                  // onBlur={handleChange}
-                  name={ph_number.name}
-                 id="formatted-numberformat-input
-                  InputProps={{
-                    inputComponent: TextMaskCustom,
-                  }}
-                /> */}
-
                 <InputField
                   disabled={!toggled}
                   name={ph_number.name}
                   label={ph_number.label}
-                  autoComplete="off"
+                />
+
+                {/* <TextField
+                  disabled={!toggled}
+                  name={ph_number.name}
+                  label={ph_number.label}
+                  // value={values.numberformat}
+                  variant="outlined"
+                  // onBlur={handleChange}
                   InputProps={{
                     inputComponent: TextMaskCustom,
                   }}
-                />
+                /> */}
+
+                {/* <InputField
+                  disabled={!toggled}
+                  name={ph_number.name}
+                  label={ph_number.label}
+                  autoComplete="off"
+                  variant="outlined"
+                  InputProps={{
+                    inputComponent: TextMaskCustom,
+                  }}
+                /> */}
               </Grid>
             )}
 
             {!toggled && (
               <Grid item xs={12} md={10}>
+                <InputField
+                  disabled={toggled}
+                  name={mob_number.name}
+                  label={mob_number.label}
+                />
+
                 {/* <TextField
                   // disabled={toggled}
                   label={mob_number.label}
@@ -170,16 +176,16 @@ export default function BasicForm(props) {
                   InputProps={{
                     inputComponent: TextMaskCustom,
                   }} */}
-                <InputField
+                {/* <InputField
                   disabled={toggled}
                   name={mob_number.name}
                   label={mob_number.label}
                   // onChange={handleChange}
-                  // onBlur={handleChange}
+                  // onKeyDown={handleChange}
                   InputProps={{
                     inputComponent: TextMaskCustom,
                   }}
-                />
+                /> */}
               </Grid>
             )}
           </Grid>

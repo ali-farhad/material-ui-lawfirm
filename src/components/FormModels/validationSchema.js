@@ -77,16 +77,18 @@ export default [
         .ensure()
         .when(`${[mob_number.name]}`, {
           is: "",
-          then: Yup.string().required(`${ph_number.requiredErrorMsg}`),
-          // .matches(phoneRegExp, "Phone number is not valid"),
+          then: Yup.string()
+            .required(`${ph_number.requiredErrorMsg}`)
+            .matches(phoneRegExp, "Phone number is not valid"),
         }),
 
       [mob_number.name]: Yup.string()
         .ensure()
         .when(`${[ph_number.name]}`, {
           is: "",
-          then: Yup.string().required(`${mob_number.requiredErrorMsg}`),
-          // .matches(phoneRegExp, "Mobile number is not valid"),
+          then: Yup.string()
+            .required(`${mob_number.requiredErrorMsg}`)
+            .matches(phoneRegExp, "Mobile number is not valid"),
         }),
       [web_url.name]: Yup.string(`${web_url.validUrlMsg}`),
       [linkadin_url.name]: Yup.string(`${linkadin_url.validUrlMsg}`),

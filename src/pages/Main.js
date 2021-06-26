@@ -66,7 +66,6 @@ export default function Main({ user, isDark }) {
     //   // console.log("T", result[0]);
     //   setUserData(result[0]);
     // };
-
     // if (user) {
     //   getUser();
     // }
@@ -96,6 +95,8 @@ export default function Main({ user, isDark }) {
       // using `result.error.message`.
     }
   }
+
+  console.log(user);
 
   return (
     <div className={classes.drawerHeader}>
