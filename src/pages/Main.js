@@ -61,15 +61,15 @@ export default function Main({ user, isDark }) {
   });
 
   useEffect(() => {
-    const getUser = async () => {
-      const result = await getUserByUserId(user.uid);
-      // console.log("T", result[0]);
-      setUserData(result[0]);
-    };
+    // const getUser = async () => {
+    //   const result = await getUserByUserId(user.uid);
+    //   // console.log("T", result[0]);
+    //   setUserData(result[0]);
+    // };
 
-    if (user) {
-      getUser();
-    }
+    // if (user) {
+    //   getUser();
+    // }
   }, []);
 
   async function handleMembership() {
